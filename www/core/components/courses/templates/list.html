@@ -14,7 +14,11 @@
                 </ion-input>
             </div>
             <section ng-repeat="course in courses | filter:{fullname: filter.filterText}" class="list card">
-                <a class="item item-icon-right" ui-sref="site.mm_course({courseid: course.id, coursefullname: course.fullname})" title="{{course.fullname}}">
+                <a ng-if="course.format !== 'competenceprofile'" class="item item-icon-right" ui-sref="site.mm_course({courseid: course.id, coursefullname: course.fullname})" title="{{course.fullname}}">
+                    <h2><mm-format-text watch="true">{{course.fullname}}</mm-format-text></h2>
+                    <i class="icon icon-accessory ion-chevron-right"></i>
+                </a>
+                <a ng-if="course.format == 'competenceprofile'" class="item item-icon-right" ui-sref="site.mm_competence({courseid: course.id, coursefullname: course.fullname})" title="{{course.fullname}}">
                     <h2><mm-format-text watch="true">{{course.fullname}}</mm-format-text></h2>
                     <i class="icon icon-accessory ion-chevron-right"></i>
                 </a>
@@ -25,7 +29,7 @@
                         </summary>
                     </p>
                 </div>
-                <div class="item mm-tab-handlers" ng-show="(course._handlers && course._handlers.length) || !areNavHandlersLoadedFor(course.id)">
+                <div ng-if="course.format !== 'competenceprofile'" class="item mm-tab-handlers" ng-show="(course._handlers && course._handlers.length) || !areNavHandlersLoadedFor(course.id)">
                     <div class="item tabs tabs-icon-top" ng-show="course._handlers && course._handlers.length">
                         <a ng-repeat="handler in course._handlers | orderBy:'-priority'" ng-controller="handler.controller" ng-click="action($event, course)" class="tab-item active mm-courses-handler {{class}}" title="{{title | translate}}">
                             <i class="icon {{icon}}"></i> {{title | translate}}

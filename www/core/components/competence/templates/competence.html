@@ -1,0 +1,54 @@
+<ion-view cache-view="false">
+    <ion-nav-title><mm-format-text watch="true">{{fullname}}</mm-format-text></ion-nav-title>
+    <ion-content padding="true">
+        <mm-loading hide-until="loaded">
+            <section class="card">
+                <div class="item item-text-wrap clearfix">
+                    <article><center><mm-format-text>Profil von {{user.lastname}}, {{user.firstname}}</mm-format-text></article>
+                </div>
+            </section>
+            <section class="card">
+                <div class="item item-text-wrap clearfix">
+                    <article><center><mm-format-text>Energieeffizienzklasse {{competenceLevel}}</mm-format-text></article>
+                </div>
+                <div class="item item-text-wrap clearfix">
+                    <article><center><mm-format-text>{{energyValue}} Punkte</mm-format-text></article>
+                </div>
+                <div class="item item-text-wrap clearfix">
+                    <article><center><img width="100%" height="auto" data-ng-src="data:image/jpeg;base64,{{avatar}}"></article>
+                </div>
+            </section>
+            <section class="card">
+                <div class="item item-text-wrap clearfix">
+                    <article><mm-format-text>Offene Module</mm-format-text></article>
+                </div>
+                <div class="item item-text-wrap clearfix row">
+                    <div class="col"><mm-format-text><b>Kurs</b></mm-format-text></div>
+                    <div class="col"><mm-format-text><b>Name</b></mm-format-text></div>
+                </div>
+                <div ng-repeat="mod in openMods" class="item item-text-wrap clearfix row">
+                    <div class="col"><mm-format-text>{{mod.course}}</mm-format-text></div>
+                    <div class="col"><mm-format-text>{{mod.name}}</mm-format-text></div>
+                </div>
+            </section>
+            <article><mm-format-text>Letzte Aktivität: {{lastactivity}}</mm-format-text></article>
+            <section class="card">
+                <div class="item item-text-wrap clearfix">
+                    <article><mm-format-text>Abgeschlossene Module</mm-format-text></article>
+                </div>
+                <div class="item item-text-wrap clearfix row">
+                    <div class="col"><mm-format-text><b>Datum</b></mm-format-text></div>
+                    <div class="col"><mm-format-text><b>Kurs</b></mm-format-text></div>
+                    <div class="col"><mm-format-text><b>Punkte</b></mm-format-text></div>
+                    <div class="col"><mm-format-text><b>Modul</b></mm-format-text></div>
+                </div>
+                <div ng-repeat="mod in closeMods" class="item item-text-wrap clearfix row">
+                    <div class="col"><mm-format-text>{{mod.date}}</mm-format-text></div>
+                    <div class="col"><mm-format-text>{{mod.course}}</mm-format-text></div>
+                    <div class="col"><mm-format-text>{{mod.points}}</mm-format-text></div>
+                    <div class="col"><mm-format-text>{{mod.module}} </mm-format-text></div>
+                </div>
+            </section>
+        </mm-loading>
+    </ion-content>
+</ion-view>
