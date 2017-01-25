@@ -21,6 +21,7 @@ angular.module('mm.core.course', ['mm.core.courses'])
 
     $stateProvider
 
+  
     .state('site.mm_course', {
         url: '/mm_course',
         params: {

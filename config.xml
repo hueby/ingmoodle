@@ -16,6 +16,7 @@
   <allow-navigation href="content:*"/>
   <allow-navigation href="data:*"/>
   <allow-navigation href="*"/>
+  <allow-navigation href="http://141.51.114.231:8100"/>
   <allow-intent href="*"/>
   <preference name="orientation" value="default"/>
   <preference name="target-device" value="universal"/>
