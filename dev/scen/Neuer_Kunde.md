@@ -50,7 +50,11 @@ Hoher Aufwand (**8h**)
 
  - Gut vorangekommen, aber stecke immer noch bei diesem Fehler hier -.-
  164   007705   error    Uncaught Error: [$injector:unpr] Unknown provider: $mmaChecklistsProvider <- $mmaChecklists
- - Morgen auf jeden Fall beheben!
+
+ - Nachtrag: Das Problem, weshalb der Fehler auftritt ist, dass es im lokalen
+             (nicht mobilen) Moodle kein Gegenstück fur die Checklists gibt.
+             Also müsste dies noch zusätzlich parallel entwickelt werden.
+             sad gg
 
 
 ## Mehr folgt..
