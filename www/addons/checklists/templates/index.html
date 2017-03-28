@@ -1,0 +1,16 @@
+<ion-view view-title="Checklists">
+    <mm-split-view component="mmaChecklistsIndex">
+        <ion-tabs class="tabs-icon-top">
+            <ion-tab title="Kunden auswählen" icon="ion-chatbox">
+                <ion-pane ng-controller="mmaChecklistsUsersCtrl">
+                    <ng-include src="'addons/messages/templates/users.html'"></ng-include>
+                </ion-pane>
+            </ion-tab>
+            <ion-tab title="WTF wo ist das hier?!" icon="ion-person-stalker">
+                <ion-pane ng-controller="mmaChecklistsUsersCtrl">
+                    <ng-include src="'addons/messages/templates/users.html'"></ng-include>
+                </ion-pane>
+            </ion-tab>
+        </ion-tabs>
+    </mm-split-view>
+</ion-view>
