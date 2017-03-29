@@ -48,6 +48,7 @@
     "protractor": "^4.0.9",
     "shelljs": "^0.3.0",
     "through": "^2.3.6",
+    "typings": "^2.1.0",
     "wd": "^0.4.0",
     "wd-bridge": "0.0.2",
     "yargs": "^3.25.0"

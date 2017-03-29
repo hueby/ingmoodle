@@ -48,13 +48,14 @@ Hoher Aufwand (**8h**)
  - Checklisten müssen als Addon beim Side-Menu registiert werden
  - Nehme addons/messages als Vorlage
 
- - Gut vorangekommen, aber stecke immer noch bei diesem Fehler hier -.-
+ - Fehler
  164   007705   error    Uncaught Error: [$injector:unpr] Unknown provider: $mmaChecklistsProvider <- $mmaChecklists
 
  - Nachtrag: Das Problem, weshalb der Fehler auftritt ist, dass es im lokalen
              (nicht mobilen) Moodle kein Gegenstück fur die Checklists gibt.
              Also müsste dies noch zusätzlich parallel entwickelt werden.
              sad gg
-
-
-## Mehr folgt..
+ - Problemlösung: git commit hash: 4e0df2d637e1f0d90bc8d0322e7487112b87eb76 !
+ - services/checklists.js war die Lösung.
+ - Es wurde als versucht $mmaChecklists zu finden, das aber nirgends definiert war...
+ - Jetzt ist es in services/checklists.js in einer Factory definiert.
