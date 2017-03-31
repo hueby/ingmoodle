@@ -17,13 +17,12 @@ angular.module('mm.addons.checklists')
 .factory('$mmaChecklistsHandlers', function($log, $mmaChecklists, $mmSite) {
     $log = $log.getInstance('$mmaChecklistsHandlers');
 
-    console.log("dadadadadada");
     var self = {};
 
     self.sideNav = function () {
         var self = {};
         self.isEnabled = function () {
-            return $mmSite.wsAvailable('mod_checklists_get_checklists');
+            return $mmSite.wsAvailable('local_checklists_get_customers');
         };
 
         self.getController = function () {
@@ -38,5 +37,4 @@ angular.module('mm.addons.checklists')
         return self;
     }
     return self;
-
 });

@@ -11,7 +11,7 @@ sein.
 der nur der Checklisten-App gehört, sodass der Anschein entsteht, es sei eine
 eigene App.
 
-## Ansichten
+## Ansichten - Anforderung
 
 ### Neuer Kunde - Anlegen :red_circle:
 
@@ -37,25 +37,42 @@ Mittlerer Aufwand (**4h**)
 
 Hoher Aufwand (**8h**)
 
+## Ansichten - Eigenvorstellung
+
+### Kundenübersicht
+
+- Alle registrierten Kunden auflisten
+
+(Kein großer Aufwand)
+
 
 ## Realisierung
 
- - `ion-side-menu` in www/core/components/sidemenu
- - Iteriert bei allen Handlern
- - Herausfinden was Handler sind
- - handlers kommen aus dem SideMenuDelegate
- - Delegate gefunden in services/delegate.js (function self.updateNavHandlers())
- - Checklisten müssen als Addon beim Side-Menu registiert werden
- - Nehme addons/messages als Vorlage
+- Gedanken
+  - Datenmodell
+    - mdl_checklists
+      - Enthält alle Kunden
+  - Die Checklisten werden an sich von den mdl_quiz Tabellen abgespeichert
+  - Evtl. noch eine Verbindungstabelle zwischen mdl_checklists und mdl_quiz mit fremdschlüsselverweisen
 
- - Fehler
- 164   007705   error    Uncaught Error: [$injector:unpr] Unknown provider: $mmaChecklistsProvider <- $mmaChecklists
 
- - Nachtrag: Das Problem, weshalb der Fehler auftritt ist, dass es im lokalen
-             (nicht mobilen) Moodle kein Gegenstück fur die Checklists gibt.
-             Also müsste dies noch zusätzlich parallel entwickelt werden.
-             sad gg
- - Problemlösung: git commit hash: 4e0df2d637e1f0d90bc8d0322e7487112b87eb76 !
- - services/checklists.js war die Lösung.
- - Es wurde als versucht $mmaChecklists zu finden, das aber nirgends definiert war...
- - Jetzt ist es in services/checklists.js in einer Factory definiert.
+- Done
+  - `ion-side-menu` in www/core/components/sidemenu
+  - Iteriert bei allen Handlern
+  - Herausfinden was Handler sind
+  - handlers kommen aus dem SideMenuDelegate
+  - Delegate gefunden in services/delegate.js (function self.updateNavHandlers())
+  - Checklisten müssen als Addon beim Side-Menu registiert werden
+  - Nehme addons/messages als Vorlage
+
+  - Fehler
+  164   007705   error    Uncaught Error: [$injector:unpr] Unknown provider: $mmaChecklistsProvider <- $mmaChecklists
+
+  - Nachtrag: Das Problem, weshalb der Fehler auftritt ist, dass es im lokalen
+              (nicht mobilen) Moodle kein Gegenstück fur die Checklists gibt.
+              Also müsste dies noch zusätzlich parallel entwickelt werden.
+              sad gg
+  - Problemlösung: git commit hash: 4e0df2d637e1f0d90bc8d0322e7487112b87eb76 !
+  - services/checklists.js war die Lösung.
+  - Es wurde als versucht $mmaChecklists zu finden, das aber nirgends definiert war...
+  - Jetzt ist es in services/checklists.js in einer Factory definiert.
