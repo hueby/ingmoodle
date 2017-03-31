@@ -1,8 +1,12 @@
-<ion-view view-title="tesdasdasd">
-    <div ng-controller="mmaChecklistsCustomersCtrl">
-        <br>
-        <br>
-        <br>
-        <p>{{bums}}</p>
-    </div>
+<ion-view>
+    <ion-nav-title>
+        <mm-format-text watch="true">Kunden</mm-format-text>
+    </ion-nav-title>
+    <ion-content load-when="sectionsLoaded" load="{{sectionToLoad}}" component="mmCoreCourseSectionsList">
+        <ion-list ng-controller="mmaChecklistsCustomersCtrl" can-swipe="listCanSwipe">
+            <ion-item ng-repeat="customer in customers" class="row">
+                {{customer.firstname}} {{customer.lastname}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
 </ion-view>
