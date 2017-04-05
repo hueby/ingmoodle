@@ -15,6 +15,7 @@
 angular.module('mm.addons.checklists', [])
 
 .constant('mmaChecklistsPriority', 600)
+.constant('mmaChecklistsCustomersRefreshed', 'user refreshed')
 
 .config(function ($stateProvider, $mmSideMenuDelegateProvider, mmaChecklistsPriority) {
     $stateProvider

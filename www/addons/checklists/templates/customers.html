@@ -1,12 +1,49 @@
 <ion-view>
-    <ion-nav-title>
-        <mm-format-text watch="true">Kunden</mm-format-text>
-    </ion-nav-title>
-    <ion-content load-when="sectionsLoaded" load="{{sectionToLoad}}" component="mmCoreCourseSectionsList">
+    <ion-nav-title>Kunden</ion-nav-title>
+    <mm-nav-buttons side="secondary">
+        <button class="button button-icon ion-plus-round" ng-click="modal.show()"></button>
+    </mm-nav-buttons>
+    <ion-content>
+        <ion-refresher pulling-text="{{ 'mm.core.pulltorefresh' | translate }}" on-refresh="refreshCustomers()">
+        </ion-refresher>
         <ion-list ng-controller="mmaChecklistsCustomersCtrl" can-swipe="listCanSwipe">
             <ion-item ng-repeat="customer in customers" class="row">
-                {{customer.firstname}} {{customer.lastname}}
+                {{customer.firstname}} {{customer.lastname}} {{customer.location}}
             </ion-item>
         </ion-list>
     </ion-content>
+
+    <script id="templates/modal.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar class="bar bar-header">
+                <h1 class="title">Neuer Kunde</h1>
+                <button class="button button-clear button-primary" ng-click="modal.hide()">Abbrechen</button>
+            </ion-header-bar>
+            <ion-content>
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label">Vorname</span>
+                        <input ng-model="newUser.firstName" type="text">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Nachname</span>
+                        <input ng-model="newUser.lastName" type="text">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Email</span>
+                        <input ng-model="newUser.email" type="text">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Stadt</span>
+                        <input ng-model="newUser.location" type="text">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Telefonnummer</span>
+                        <input ng-model="newUser.phone" type="text">
+                    </label>
+                    <button class="button button-full" ng-click="createCustomer(newUser)">Kunde erstellen</button>
+                </div>
+            </ion-content>
+        </ion-modal-view>
+    </script>
 </ion-view>
