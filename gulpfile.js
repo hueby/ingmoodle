@@ -907,6 +907,7 @@ gulp.task('remoteaddon', ['remoteaddon-build', 'remoteaddon-sass', 'remoteaddon-
       done();
     });
 });
+<<<<<<< HEAD
 
 // Cleans the development environment by deleting downloaded files and libraries
 gulp.task('clean-libs', ['clean-www-libs', 'clean-ionic-platforms', 'clean-e2e-build', 'clean-sass-cache', 'clean-ionic-plugins']);
@@ -952,3 +953,8 @@ gulp.task('clean-node-modules', function() {
   return gulp.src('node_modules/', {read: false})
     .pipe(clean());
 });
+||||||| merged common ancestors
+=======
+
+gulp.task('serve:before', ['default', 'watch']);
+>>>>>>> Things I've done:

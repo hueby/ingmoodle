@@ -1,0 +1,9 @@
+{
+    "extends": "ionic",
+    "env": {
+        "browser": true
+    },
+    "globals": {
+        "angular": true
+    }
+}

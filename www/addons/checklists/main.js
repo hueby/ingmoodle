@@ -14,21 +14,21 @@
 
 angular.module('mm.addons.checklists', [])
 
-.constant('mmaChecklistsPriority', 600)
-.constant('mmaChecklistsCustomersRefreshed', 'user refreshed')
+  .constant('mmaChecklistsPriority', 600)
+  .constant('mmaChecklistsCustomersRefreshed', 'user refreshed')
 
-.config(function ($stateProvider, $mmSideMenuDelegateProvider, mmaChecklistsPriority) {
+  .config(function($stateProvider, $mmSideMenuDelegateProvider, mmaChecklistsPriority) {
     $stateProvider
-    .state('site.checklists', {
-        url: '/checklists',
-        views: {
-            'site': {
-                templateUrl: 'addons/checklists/templates/customers.html',
-                controller: 'mmaChecklistsCustomersCtrl'
-            }
+      .state('site.checklists', {
+        "url": '/checklists',
+        "views": {
+          'site': {
+            'templateUrl': 'addons/checklists/templates/customers.html',
+            'controller': 'mmaChecklistsCustomersCtrl'
+          }
         }
-    });
+      });
 
     $mmSideMenuDelegateProvider.registerNavHandler('mmaChecklists', '$mmaChecklistsHandlers.sideNav', mmaChecklistsPriority);
 
-});
+  });

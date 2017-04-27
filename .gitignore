@@ -16,3 +16,5 @@ e2e/build
 tags
 typings/
 tags.*
+res
+.jsbeautifyrc
