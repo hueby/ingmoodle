@@ -11,3 +11,8 @@ www/lib
 e2e/build
 /desktop/*
 !/desktop/assets/
+.idea/
+.vscode/
+tags
+typings/
+tags.*

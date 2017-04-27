@@ -13,5 +13,6 @@
     "www/build/**/*",
     "www/index.html",
     "!www/lib/**/*"
-  ]
+  ],
+  "defaultBrowser": "google chrome"
 }
