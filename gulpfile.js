@@ -886,3 +886,5 @@ gulp.task('remoteaddon', ['remoteaddon-build', 'remoteaddon-sass', 'remoteaddon-
       done();
     });
 });
+
+gulp.task('serve:before', ['default', 'watch']);
