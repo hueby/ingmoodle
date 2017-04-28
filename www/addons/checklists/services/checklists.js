@@ -12,7 +12,8 @@ angular.module('mm.addons.checklists')
     self.getCustomers = function() {
         $log.debug('Get customers');
         
-        return $mmSite.read('local_checklists_get_customers');
+                                                                    // f*** you cache!
+        return $mmSite.read('local_checklists_get_customers', null, {getFromCache: 0, saveToCache:0});
     }
 
     return self;

@@ -1,5 +1,5 @@
 <ion-view>
-    <ion-nav-title>Kundn</ion-nav-title>
+    <ion-nav-title>Kundenübersicht</ion-nav-title>
     <mm-nav-buttons side="secondary">
         <button class="button button-icon ion-plus-round" ng-click="modal.show()"></button>
     </mm-nav-buttons>
@@ -7,9 +7,9 @@
         <ion-refresher pulling-text="{{ 'mm.core.pulltorefresh' | translate }}" on-refresh="refreshCustomers()">
         </ion-refresher>
         <ion-list ng-controller="mmaChecklistsCustomersCtrl" can-swipe="listCanSwipe">
-            <ion-item ng-repeat="customer in customers" class="row">
+            <a ng-repeat="customer in customers" ui-sref="site.checklist_begin({customer: customer})" class="item">
                 {{customer.firstname}} {{customer.lastname}} {{customer.location}}
-            </ion-item>
+            </a>
         </ion-list>
     </ion-content>
 

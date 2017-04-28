@@ -1,6 +1,6 @@
 angular.module('mm.addons.checklists')
 
-    .controller('mmaChecklistsCustomersCtrl', function($scope, $timeout, $stateParams, $mmaChecklists, $ionicModal, $mmSite, $mmEvents, mmaChecklistsCustomersRefreshed) {
+    .controller('mmaChecklistsCustomersCtrl', function($scope, $ionicHistory, $state, $timeout, $stateParams, $mmaChecklists, $ionicModal, $mmSite, $mmEvents, mmaChecklistsCustomersRefreshed, mmaChecklistsCustomersAdded) {
       $scope.canSwipe = true;
 
       $scope.customers = [];
@@ -20,12 +20,9 @@ angular.module('mm.addons.checklists')
           "location": newuser.location,
           "username": 'test'
         };
+
         $mmSite.write('local_checklists_insert_customer', newUser).then(function(id) {
           $scope.modal.hide();
-          newUser.id = id.id;
-          console.log(JSON.stringify($scope.customers));
-          $scope.customers.push(newUser);
-          console.log(JSON.stringify($scope.customers));
           $scope.refreshCustomers();
         });
       };
@@ -37,7 +34,7 @@ angular.module('mm.addons.checklists')
       $mmaChecklists.getCustomers().then(function(customers) {
         $scope.customers = customers;
       });
-      $scope.bums = "1 * (3 + 3) * 7 = 42";
+
       $mmEvents.on(mmaChecklistsCustomersRefreshed, function() {
         $mmaChecklists.getCustomers().then(function(customers) {
           $scope.customers = customers;
