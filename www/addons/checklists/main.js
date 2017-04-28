@@ -16,15 +16,28 @@ angular.module('mm.addons.checklists', [])
 
   .constant('mmaChecklistsPriority', 600)
   .constant('mmaChecklistsCustomersRefreshed', 'user refreshed')
+  .constant('mmaChecklistsCustomersAdded', 'user added')
 
   .config(function($stateProvider, $mmSideMenuDelegateProvider, mmaChecklistsPriority) {
     $stateProvider
       .state('site.checklists', {
-        "url": '/checklists',
-        "views": {
-          'site': {
-            'templateUrl': 'addons/checklists/templates/customers.html',
-            'controller': 'mmaChecklistsCustomersCtrl'
+        url: '/checklists',
+        views: {
+          site: {
+            templateUrl: 'addons/checklists/templates/customers.html',
+            controller: 'mmaChecklistsCustomersCtrl'
+          }
+        }
+      })
+      .state('site.checklist_begin', {
+        url: '/checklist_begin',
+        params: {
+          customer: null
+        },
+        views: {
+          site: {
+            templateUrl: 'addons/checklists/templates/checklist_begin.html',
+            controller: 'mmaChecklistsChecklistBeginCtrl'
           }
         }
       });
