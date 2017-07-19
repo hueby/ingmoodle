@@ -10,7 +10,9 @@
   ],
   "watchPatterns": [
     "www/**/*",
-    "!www/lib/**/*"
+    "!www/lib/**/*",
+    "scss/**/*"
   ],
-  "defaultBrowser": "google chrome"
+  "defaultBrowser": "google chrome",
+  "type": "ionic1"
 }
