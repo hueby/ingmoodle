@@ -12,27 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-angular.module('mm.addons.checklists')
+angular.module('mm.addons.mobile')
 
-.factory('$mmaChecklistsHandlers', function($log, $mmaChecklists, $mmSite) {
-    $log = $log.getInstance('$mmaChecklistsHandlers');
+.factory('$mmaMobileHandlers', function($log, $mmaChecklists, $mmSite) {
+    $log = $log.getInstance('$mmaMobileHandlers');
 
     var self = {};
 
     self.sideNav = function () {
         var self = {};
         self.isEnabled = function () {
-            return $mmSite.wsAvailable('local_checklists_get_customers');
+            return $mmSite.wsAvailable('local_mobile_get_energy_consultant');
         };
 
         self.getController = function () {
             return function ($scope) {
-                $scope.icon = 'ion-android-checkbox-outline';
-                $scope.title = 'mma.checklists.title';
-                $scope.state = 'site.checklists';
-                $scope.class = 'mma-checklists-handler';
+                $scope.icon  = 'ion-briefcase';
+                $scope.title = 'Energieberater';
+                $scope.state = 'site.mobile';
+                $scope.class = 'mma-mobile-handler';
             }
-
         }
         return self;
     }

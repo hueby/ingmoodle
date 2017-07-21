@@ -16,3 +16,5 @@ typings/
 tags.*
 res
 .jsbeautifyrc
+.DS_Store
+*.swp
