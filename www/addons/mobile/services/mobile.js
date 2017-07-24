@@ -9,10 +9,10 @@ angular.module('mm.addons.mobile')
     $log = $log.getInstance('$mmaMobile');
     var self = {}
 
-    self.getCustomers = function() {
+    self.getEnergyConsultant= function(userid) {
       $log.debug('Get energy_consultants');
 
-      return $mmSite.read('local_mobile_get_energy_consultant', null,
+      return $mmSite.read('local_mobile_get_energy_consultant', {userid: userid},
         {getFromCache: 0, saveToCache:0});
     }
 

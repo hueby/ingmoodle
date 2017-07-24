@@ -29,26 +29,28 @@ angular.module('mm.addons.mobile', [])
           }
         }
       })
-      .state('site.consultant_overview', {
-        url: '/consultant_overview',
+      .state('site.consultant_dashboard', {
+        url: '/consultant_dashboard',
         params: {
           consultant: null
         },
         views: {
           site: {
-            templateUrl: 'addons/mobile/templates/consultant_overview.html',
+            templateUrl: 'addons/mobile/templates/dashboard.html',
             controller: 'mmaMobileConsultantOverviewCtrl'
           }
         }
       })
-      .state('site.consultant_detail', {
+      .state('site.mmaConsultant', {
         url: '/consultant_detail',
         params: {
           consultant: null
         },
         views: {
-            templateUrl: 'addons/mobile/templates/consultant_detail.html',
+          site: {
+            templateUrl: 'addons/mobile/templates/detail.html',
             controller: 'mmaMobileConsultantDetailCtrl'
+          }
         }
       });
 

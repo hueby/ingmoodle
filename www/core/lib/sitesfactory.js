@@ -615,7 +615,7 @@ angular.module('mm.core')
             var site = this,
                 initialToken = site.token;
             data = data || {};
-            console.log(JSON.stringify(data));
+            console.log("DATAR: " + JSON.stringify(data));
             // Get the method to use based on the available ones.
             method = site.getCompatibleFunction(method);
 
