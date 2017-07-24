@@ -3,7 +3,7 @@
     <name>Moodle Mobile</name>
     <description>Official Moodle Mobile app</description>
     <author email="juan@moodle.com" href="http://moodle.com">Juan Leyva</author>
-    <content original-src="index.html" src="http://141.51.114.248:8100" />
+    <content original-src="index.html" src="http://192.168.2.114:8100" />
     <access origin="*" />
     <allow-navigation href="cdvfile:*" />
     <allow-navigation href="content:*" />
@@ -11,6 +11,7 @@
     <allow-navigation href="*" />
     <allow-navigation href="http://141.51.114.231:8100" />
     <allow-navigation href="http://141.51.114.248:8100" />
+    <allow-navigation href="http://192.168.2.114:8100" />
     <allow-intent href="*" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />

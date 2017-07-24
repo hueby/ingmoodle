@@ -463,7 +463,7 @@ angular.module('mm.core')
             var site = this,
                 initialToken = site.token;
             data = data || {};
-            console.log(JSON.stringify(data));
+            console.log("DATAR: " + JSON.stringify(data));
             // Prevent calls with expired tokens.
             if (site.isTokenExpired()) {
                 $log.debug('Token expired, rejecting.');
@@ -490,7 +490,7 @@ angular.module('mm.core')
             preSets.wstoken = site.token;
             preSets.siteurl = site.siteurl;
             
-            console.log(JSON.stringify(preSets));
+            console.log("PRESETS: " + JSON.stringify(preSets));
 
             // Enable text filtering by default.
             data.moodlewssettingfilter = preSets.filter === false ? false : true;
