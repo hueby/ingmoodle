@@ -7,14 +7,12 @@ angular.module('mm.addons.mobile')
     $scope.login = function() {
 
       $mmaMobile.getEnergyConsultant($mmSite.getUserId()).then(function(consultant) {
-        console.log("Consultant" + JSON.stringify(consultant));
-        console.log("MOODLE ID " + consultant[0].moodleid);
-
-        if(consultant[0].moodleid === "3") {
-          $state.go("site.consultant_dashboard");
+          consultant = consultant[0];
+        if(consultant.moodleid == $mmSite.getUserId()) {
+          $state.go("site.consultant_dashboard", {consultant: consultant});
         }
       });
 
       //$state.go("site.mm_courses");
-    }
+    };
   });
