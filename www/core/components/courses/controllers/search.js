@@ -21,10 +21,10 @@ angular.module('mm.core.courses')
  * @ngdoc controller
  * @name mmCoursesSearchCtrl
  */
-.controller('mmCoursesSearchCtrl', function($scope, $mmCourses, $q, $mmUtil) {
+.controller('mmCoursesSearchCtrl', function ($scope, $mmCourses, $q, $mmUtil) {
 
     var page = 0,
-    	currentSearch = '';
+        currentSearch = '';
 
     $scope.searchText = '';
 
@@ -34,7 +34,7 @@ angular.module('mm.core.courses')
             page = 0;
         }
 
-        return $mmCourses.search(currentSearch, page).then(function(response) {
+        return $mmCourses.search(currentSearch, page).then(function (response) {
             if (page === 0) {
                 $scope.courses = response.courses;
             } else {
@@ -44,24 +44,25 @@ angular.module('mm.core.courses')
 
             page++;
             $scope.canLoadMore = $scope.courses.length < $scope.total;
-        }).catch(function(message) {
+        }).catch(function (message) {
             $scope.canLoadMore = false;
             $mmUtil.showErrorModalDefault(message, 'mm.courses.errorsearching', true);
             return $q.reject();
         });
     }
 
-    $scope.search = function(text) {
+    $scope.search = function (text) {
         currentSearch = text;
         $scope.courses = undefined;
 
-    	var modal = $mmUtil.showModalLoading('mm.core.searching', true);
-    	searchCourses(true).finally(function() {
+        var modal = $mmUtil.showModalLoading('mm.core.searching', true);
+        searchCourses(true).finally(function () {
             modal.dismiss();
-    	});
+        });
     };
 
-    $scope.loadMoreResults = function() {
-    	searchCourses();
+    $scope.loadMoreResults = function () {
+        searchCourses();
     };
 });
+//# sourceMappingURL=search.js.map

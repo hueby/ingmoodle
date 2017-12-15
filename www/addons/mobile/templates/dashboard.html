@@ -1,14 +1,12 @@
 <ion-view>
     <ion-nav-title>Dashboard</ion-nav-title>
     <mm-nav-buttons side="secondary">
+        <button class="button button-icon ion-plus" ng-click="consultantAdd()"></button>
         <button class="button button-icon ion-stats-bars" ng-click="consultantDetail()"></button>
     </mm-nav-buttons>
     <ion-content>
-        <ion-list>
-            <div class="item item-button-right">Arbeitsprozess 1</div>
-            <div class="item item-button-right">Arbeitsprozess 2</div>
-            <div class="item item-button-right">Arbeitsprozess 3</div>
-            <div class="item item-button-right">Arbeitsprozess 4</div>
+        <ion-list ng-repeat="customer in customers">
+            <div class="item item-button-right" ng-click="customerSelected(customer.id)">{{customer.lastname}}, {{customer.firstname}}</div>
         </ion-list>
     </ion-content>
 </ion-view>

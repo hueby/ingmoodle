@@ -21,8 +21,7 @@ angular.module('mm.core.courses')
  * @ngdoc service
  * @name $mmCoursesHandlers
  */
-.factory('$mmCoursesHandlers', function($mmSite, $state, $mmCourses, $q, $mmUtil, $translate, $timeout, $mmCourse, $mmSitesManager,
-            mmCoursesEnrolInvalidKey, $mmContentLinkHandlerFactory, $mmAddonManager) {
+.factory('$mmCoursesHandlers', function ($mmSite, $state, $mmCourses, $q, $mmUtil, $translate, $timeout, $mmCourse, $mmSitesManager, mmCoursesEnrolInvalidKey, $mmContentLinkHandlerFactory, $mmAddonManager) {
 
     var self = {};
 
@@ -34,15 +33,15 @@ angular.module('mm.core.courses')
      * @ngdoc method
      * @name $mmCoursesHandlers#myCoursesLinksHandler
      */
-    self.coursesLinksHandler = $mmContentLinkHandlerFactory.createChild(
-                /\/course\/?(index\.php.*)?$/, '$mmSideMenuDelegate_mmCourses');
+    self.coursesLinksHandler = $mmContentLinkHandlerFactory.createChild(/\/course\/?(index\.php.*)?$/, '$mmSideMenuDelegate_mmCourses');
 
     // Get actions to perform with the link. See $mmContentLinkHandlerFactory#getActions.
-    self.coursesLinksHandler.getActions = function(siteIds, url, params, courseId) {
+    self.coursesLinksHandler.getActions = function (siteIds, url, params, courseId) {
         return [{
-            action: function(siteId) {
-                var state = 'site.mm_courses', // By default, go to My Courses (old Moodles).
-                    stateParams = {};
+            action: function (siteId) {
+                var state = 'site.mm_courses',
+                    // By default, go to My Courses (old Moodles).
+                stateParams = {};
 
                 if ($mmCourses.isGetCoursesByFieldAvailable()) {
                     if (params.categoryid && $mmCourses.isGetCategoriesAvailable()) {
@@ -70,11 +69,10 @@ angular.module('mm.core.courses')
      * @ngdoc method
      * @name $mmCoursesHandlers#courseLinksHandler
      */
-    self.courseLinksHandler = $mmContentLinkHandlerFactory.createChild(
-                /((\/enrol\/index\.php)|(\/course\/enrol\.php)|(\/course\/view\.php)).*([\?\&]id=\d+)/);
+    self.courseLinksHandler = $mmContentLinkHandlerFactory.createChild(/((\/enrol\/index\.php)|(\/course\/enrol\.php)|(\/course\/view\.php)).*([\?\&]id=\d+)/);
 
     // Check if the handler is enabled for a certain site. See $mmContentLinkHandlerFactory#isEnabled.
-    self.courseLinksHandler.isEnabled = function(siteId, url, params, courseId) {
+    self.courseLinksHandler.isEnabled = function (siteId, url, params, courseId) {
         courseId = parseInt(params.id, 10);
 
         if (!courseId) {
@@ -82,28 +80,28 @@ angular.module('mm.core.courses')
         }
 
         // Get the course id of Site Home.
-        return $mmSitesManager.getSiteHomeId(siteId).then(function(siteHomeId) {
-           return courseId != siteHomeId;
-       });
+        return $mmSitesManager.getSiteHomeId(siteId).then(function (siteHomeId) {
+            return courseId != siteHomeId;
+        });
     };
 
     // Get actions to perform with the link. See $mmContentLinkHandlerFactory#getActions.
-    self.courseLinksHandler.getActions = function(siteIds, url, params, courseId) {
+    self.courseLinksHandler.getActions = function (siteIds, url, params, courseId) {
         courseId = parseInt(params.id, 10);
 
         var sectionId = params.sectionid ? parseInt(params.sectionid, 10) : null,
             sectionNumber = typeof params.section != 'undefined' ? parseInt(params.section, 10) : NaN,
             stateParams = {
-                courseid: courseId,
-                sid: sectionId || null
-            };
+            courseid: courseId,
+            sid: sectionId || null
+        };
 
         if (!isNaN(sectionNumber)) {
             stateParams.sectionnumber = sectionNumber;
         }
 
         return [{
-            action: function(siteId) {
+            action: function (siteId) {
                 siteId = siteId || $mmSite.getId();
                 if (siteId == $mmSite.getId()) {
                     actionEnrol(courseId, url, stateParams);
@@ -133,45 +131,44 @@ angular.module('mm.core.courses')
             isEnrolUrl = !!url.match(/(\/enrol\/index\.php)|(\/course\/enrol\.php)/);
 
         // Check if user is enrolled in the course.
-        $mmCourses.getUserCourse(courseId).catch(function() {
+        $mmCourses.getUserCourse(courseId).catch(function () {
             // User is not enrolled in the course. Check if can self enrol.
-            return canSelfEnrol(courseId).then(function() {
+            return canSelfEnrol(courseId).then(function () {
                 var promise;
                 modal.dismiss();
 
                 // The user can self enrol. If it's not a enrolment URL we'll ask for confirmation.
                 promise = isEnrolUrl ? $q.when() : $mmUtil.showConfirm($translate('mm.courses.confirmselfenrol'));
 
-                return promise.then(function() {
+                return promise.then(function () {
                     // Enrol URL or user confirmed.
-                    return selfEnrol(courseId).catch(function(error) {
+                    return selfEnrol(courseId).catch(function (error) {
                         if (typeof error == 'string') {
                             $mmUtil.showErrorModal(error);
                         }
                         return $q.reject();
                     });
-                }, function() {
+                }, function () {
                     // User cancelled. Check if the user can view the course contents (guest access or similar).
                     return $mmCourse.getSections(courseId, false, true);
                 });
-            }, function(error) {
+            }, function (error) {
                 // Can't self enrol. Check if the user can view the course contents (guest access or similar).
-                return $mmCourse.getSections(courseId, false, true).catch(function() {
+                return $mmCourse.getSections(courseId, false, true).catch(function () {
                     // Error. Show error message and allow the user to open the link in browser.
                     modal.dismiss();
                     if (typeof error != 'string') {
                         error = $translate.instant('mm.courses.notenroled');
                     }
 
-                    var body = $translate('mm.core.twoparagraphs',
-                                    {p1: error, p2: $translate.instant('mm.core.confirmopeninbrowser')});
-                    $mmUtil.showConfirm(body).then(function() {
+                    var body = $translate('mm.core.twoparagraphs', { p1: error, p2: $translate.instant('mm.core.confirmopeninbrowser') });
+                    $mmUtil.showConfirm(body).then(function () {
                         $mmSite.openInBrowserWithAutoLogin(url);
                     });
                     return $q.reject();
                 });
             });
-        }).then(function() {
+        }).then(function () {
             modal.dismiss();
             // Use redirect to make the course the new history root (to avoid "loops" in history).
             $state.go('redirect', {
@@ -195,10 +192,10 @@ angular.module('mm.core.courses')
         }
 
         // Check that the course has self enrolment enabled.
-        return $mmCourses.getCourseEnrolmentMethods(courseId).then(function(methods) {
+        return $mmCourses.getCourseEnrolmentMethods(courseId).then(function (methods) {
             var isSelfEnrolEnabled = false,
                 instances = 0;
-            angular.forEach(methods, function(method) {
+            angular.forEach(methods, function (method) {
                 if (method.type == 'self' && method.status) {
                     isSelfEnrolEnabled = true;
                     instances++;
@@ -221,32 +218,32 @@ angular.module('mm.core.courses')
      */
     function selfEnrol(courseId, password) {
         var modal = $mmUtil.showModalLoading();
-        return $mmCourses.selfEnrol(courseId, password).then(function() {
+        return $mmCourses.selfEnrol(courseId, password).then(function () {
             // Success self enrolling the user, invalidate the courses list.
-            return $mmCourses.invalidateUserCourses().catch(function() {
+            return $mmCourses.invalidateUserCourses().catch(function () {
                 // Ignore errors.
-            }).then(function() {
+            }).then(function () {
                 // For some reason, if we get the course list right after self enrolling
                 // we won't retrieve the new course. Let's delay it a bit.
-                return $timeout(function() {}, 4000).finally(function() {
+                return $timeout(function () {}, 4000).finally(function () {
                     modal.dismiss();
                 });
             });
-
-        }).catch(function(error) {
+        }).catch(function (error) {
             modal.dismiss();
             if (error && error.code === mmCoursesEnrolInvalidKey) {
                 // Invalid password. Allow the user to input password.
                 var title = $translate.instant('mm.courses.selfenrolment'),
-                    body = ' ', // Empty message.
-                    placeholder = $translate.instant('mm.courses.password');
+                    body = ' ',
+                    // Empty message.
+                placeholder = $translate.instant('mm.courses.password');
 
                 if (typeof password != 'undefined') {
                     // The user attempted a password. Show an error message.
                     $mmUtil.showErrorModal(error.message);
                 }
 
-                return $mmUtil.showPrompt(body, title, placeholder).then(function(password) {
+                return $mmUtil.showPrompt(body, title, placeholder).then(function (password) {
                     return selfEnrol(courseId, password);
                 });
             } else {
@@ -262,13 +259,12 @@ angular.module('mm.core.courses')
      * @ngdoc method
      * @name $mmCoursesHandlers#dashboardLinksHandler
      */
-    self.dashboardLinksHandler = $mmContentLinkHandlerFactory.createChild(
-                /\/my\/?$/, '$mmSideMenuDelegate_mmCourses');
+    self.dashboardLinksHandler = $mmContentLinkHandlerFactory.createChild(/\/my\/?$/, '$mmSideMenuDelegate_mmCourses');
 
     // Get actions to perform with the link. See $mmContentLinkHandlerFactory#getActions.
-    self.dashboardLinksHandler.getActions = function(siteIds, url, params, courseId) {
+    self.dashboardLinksHandler.getActions = function (siteIds, url, params, courseId) {
         return [{
-            action: function(siteId) {
+            action: function (siteId) {
                 // Always use redirect to make it the new history root (to avoid "loops" in history).
                 $state.go('redirect', {
                     siteid: siteId || $mmSite.getId(),
@@ -285,7 +281,7 @@ angular.module('mm.core.courses')
      * @ngdoc method
      * @name $mmCoursesHandlers#sideMenuNav
      */
-    self.sideMenuNav = function() {
+    self.sideMenuNav = function () {
 
         var self = {};
 
@@ -295,13 +291,13 @@ angular.module('mm.core.courses')
          * @return {Promise|Boolean} If handler is enabled returns a resolved promise. If it's not it can return a
          *                           rejected promise or false.
          */
-        self.isEnabled = function() {
+        self.isEnabled = function () {
             var myCoursesDisabled = $mmCourses.isMyCoursesDisabledInSite();
 
             // Check if overview side menu is available, so it won't show My courses.
             var $mmaMyOverview = $mmAddonManager.get('$mmaMyOverview');
             if ($mmaMyOverview) {
-                return $mmaMyOverview.isSideMenuAvailable().then(function(enabled) {
+                return $mmaMyOverview.isSideMenuAvailable().then(function (enabled) {
                     if (enabled) {
                         return false;
                     }
@@ -318,7 +314,7 @@ angular.module('mm.core.courses')
          *
          * @return {Object} Controller.
          */
-        self.getController = function() {
+        self.getController = function () {
 
             /**
              * Side menu nav handler controller.
@@ -327,7 +323,7 @@ angular.module('mm.core.courses')
              * @ngdoc controller
              * @name $mmCoursesHandlers#sideMenuNav:controller
              */
-            return function($scope) {
+            return function ($scope) {
                 $scope.icon = 'ion-ionic';
                 $scope.title = 'mm.courses.mycourses';
                 $scope.state = 'site.mm_courses';
@@ -340,3 +336,4 @@ angular.module('mm.core.courses')
 
     return self;
 });
+//# sourceMappingURL=handlers.js.map

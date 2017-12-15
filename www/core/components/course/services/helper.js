@@ -21,14 +21,10 @@ angular.module('mm.core.course')
  * @ngdoc service
  * @name $mmCourseHelper
  */
-.factory('$mmCourseHelper', function($q, $mmCoursePrefetchDelegate, $mmFilepool, $mmUtil, $mmCourse, $mmSite, $state, $mmText,
-            mmCoreNotDownloaded, mmCoreOutdated, mmCoreDownloading, mmCoreCourseAllSectionsId, $mmSitesManager, $mmAddonManager,
-            $controller, $mmCourseDelegate, $translate, $mmEvents, mmCoreEventPackageStatusChanged, mmCoreNotDownloadable,
-            mmCoreDownloaded) {
+.factory('$mmCourseHelper', function ($q, $mmCoursePrefetchDelegate, $mmFilepool, $mmUtil, $mmCourse, $mmSite, $state, $mmText, mmCoreNotDownloaded, mmCoreOutdated, mmCoreDownloading, mmCoreCourseAllSectionsId, $mmSitesManager, $mmAddonManager, $controller, $mmCourseDelegate, $translate, $mmEvents, mmCoreEventPackageStatusChanged, mmCoreNotDownloadable, mmCoreDownloaded) {
 
     var self = {},
         calculateSectionStatus = false;
-
 
     /**
      * Get the current value to show section status and allow section downloads.
@@ -38,10 +34,9 @@ angular.module('mm.core.course')
      * @name $mmCourseHelper#isDownloadSectionsEnabled
      * @return {Boolean}    If section status and downloads are enabled.
      */
-    self.isDownloadSectionsEnabled = function() {
+    self.isDownloadSectionsEnabled = function () {
         return calculateSectionStatus;
     };
-
 
     /**
      * Set the current value to show section status and allow section downloads.
@@ -51,7 +46,7 @@ angular.module('mm.core.course')
      * @name $mmCourseHelper#setDownloadSectionsEnabled
      * @param {Boolean}     status  If section status and downloads are enabled.
      */
-    self.setDownloadSectionsEnabled = function(status) {
+    self.setDownloadSectionsEnabled = function (status) {
         calculateSectionStatus = status;
         return calculateSectionStatus;
     };
@@ -70,12 +65,11 @@ angular.module('mm.core.course')
      *                                    if restoreDownloads=true.
      * @return {Promise}         Promise resolved when the state is calculated.
      */
-    self.calculateSectionStatus = function(section, courseid, restoreDownloads, refresh, dwnpromises) {
+    self.calculateSectionStatus = function (section, courseid, restoreDownloads, refresh, dwnpromises) {
 
         if (section.id !== mmCoreCourseAllSectionsId) {
             // Get the status of this section.
-            return $mmCoursePrefetchDelegate.getModulesStatus(section.id, section.modules, courseid, refresh, restoreDownloads)
-                    .then(function(result) {
+            return $mmCoursePrefetchDelegate.getModulesStatus(section.id, section.modules, courseid, refresh, restoreDownloads).then(function (result) {
 
                 // Check if it's being downloaded. We can't trust status 100% because downloaded books are always outdated.
                 var downloadid = self.getSectionDownloadId(section);
@@ -93,12 +87,11 @@ angular.module('mm.core.course')
                 } else if (!restoreDownloads) {
                     // Set download data.
                     section.count = 0;
-                    section.total = result[mmCoreOutdated].length + result[mmCoreNotDownloaded].length +
-                                    result[mmCoreDownloading].length;
+                    section.total = result[mmCoreOutdated].length + result[mmCoreNotDownloaded].length + result[mmCoreDownloading].length;
                     section.isDownloading = true;
                 } else {
                     // Restore or re-start the prefetch.
-                    var promise = self.startOrRestorePrefetch(section, result, courseid).then(function(prevented) {
+                    var promise = self.startOrRestorePrefetch(section, result, courseid).then(function (prevented) {
                         if (prevented !== true) {
                             // Re-calculate the status of this section once finished.
                             return self.calculateSectionStatus(section, courseid);
@@ -128,32 +121,31 @@ angular.module('mm.core.course')
      * @return {Promise}                  Promise resolved when the states are calculated. Returns an array of download promises
      *                                    with the restored downloads (only if restoreDownloads=true).
      */
-    self.calculateSectionsStatus = function(sections, courseid, restoreDownloads, refresh) {
+    self.calculateSectionsStatus = function (sections, courseid, restoreDownloads, refresh) {
 
         var allsectionssection,
             allsectionsstatus,
             downloadpromises = [],
             statuspromises = [];
 
-        angular.forEach(sections, function(section) {
+        angular.forEach(sections, function (section) {
             if (section.id === mmCoreCourseAllSectionsId) {
                 // "All sections" section status is calculated using the status of the rest of sections.
                 allsectionssection = section;
                 section.isCalculating = true;
             } else {
                 section.isCalculating = true;
-                statuspromises.push(self.calculateSectionStatus(section, courseid, restoreDownloads, refresh, downloadpromises)
-                        .then(function(result) {
+                statuspromises.push(self.calculateSectionStatus(section, courseid, restoreDownloads, refresh, downloadpromises).then(function (result) {
 
                     // Calculate "All sections" status.
                     allsectionsstatus = $mmFilepool.determinePackagesStatus(allsectionsstatus, result.status);
-                }).finally(function() {
+                }).finally(function () {
                     section.isCalculating = false;
                 }));
             }
         });
 
-        return $q.all(statuspromises).then(function() {
+        return $q.all(statuspromises).then(function () {
             if (allsectionssection) {
                 // Set "All sections" data.
                 allsectionssection.showDownload = allsectionsstatus === mmCoreNotDownloaded;
@@ -161,7 +153,7 @@ angular.module('mm.core.course')
                 allsectionssection.isDownloading = allsectionsstatus === mmCoreDownloading;
             }
             return downloadpromises;
-        }).finally(function() {
+        }).finally(function () {
             if (allsectionssection) {
                 allsectionssection.isCalculating = false;
             }
@@ -179,7 +171,7 @@ angular.module('mm.core.course')
      * @param {Object[]} sections List of sections. Used when downloading all the sections.
      * @return {Promise}          Promise resolved if the user confirms or there's no need to confirm.
      */
-    self.confirmDownloadSize = function(courseid, section, sections) {
+    self.confirmDownloadSize = function (courseid, section, sections) {
         var sizePromise;
 
         // Calculate the size of the download.
@@ -188,24 +180,24 @@ angular.module('mm.core.course')
         } else {
             var promises = [],
                 results = {
-                    size: 0,
-                    total: true
-                };
+                size: 0,
+                total: true
+            };
 
-            angular.forEach(sections, function(s) {
+            angular.forEach(sections, function (s) {
                 if (s.id != mmCoreCourseAllSectionsId) {
-                    promises.push($mmCoursePrefetchDelegate.getDownloadSize(s.modules, courseid).then(function(sectionsize) {
+                    promises.push($mmCoursePrefetchDelegate.getDownloadSize(s.modules, courseid).then(function (sectionsize) {
                         results.total = results.total && sectionsize.total;
                         results.size += sectionsize.size;
                     }));
                 }
             });
-            sizePromise = $q.all(promises).then(function() {
+            sizePromise = $q.all(promises).then(function () {
                 return results;
             });
         }
 
-        return sizePromise.then(function(size) {
+        return sizePromise.then(function (size) {
             // Show confirm modal if needed.
             return $mmUtil.confirmDownloadSize(size);
         });
@@ -222,10 +214,10 @@ angular.module('mm.core.course')
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with the module's course ID.
      */
-    self.getModuleCourseIdByInstance = function(id, module, siteId) {
-        return $mmCourse.getModuleBasicInfoByInstance(id, module, siteId).then(function(cm) {
+    self.getModuleCourseIdByInstance = function (id, module, siteId) {
+        return $mmCourse.getModuleBasicInfoByInstance(id, module, siteId).then(function (cm) {
             return cm.course;
-        }).catch(function(error) {
+        }).catch(function (error) {
             if (error) {
                 $mmUtil.showErrorModal(error);
             } else {
@@ -247,16 +239,16 @@ angular.module('mm.core.course')
      * @param  {String} [component]             Component of the module.
      * @return {Promise}                        Promise resolved with the download size, timemodified and module status.
      */
-    self.getModulePrefetchInfo = function(module, courseId, invalidateCache, component) {
+    self.getModulePrefetchInfo = function (module, courseId, invalidateCache, component) {
 
         var moduleInfo = {
-                size: false,
-                sizeReadable: false,
-                timemodified: false,
-                timemodifiedReadable: false,
-                status: false,
-                statusIcon: false
-            },
+            size: false,
+            sizeReadable: false,
+            timemodified: false,
+            timemodifiedReadable: false,
+            status: false,
+            statusIcon: false
+        },
             siteId = $mmSite.getId(),
             promises = [];
 
@@ -264,12 +256,12 @@ angular.module('mm.core.course')
             $mmCoursePrefetchDelegate.invalidateModuleStatusCache(module);
         }
 
-        promises.push($mmCoursePrefetchDelegate.getModuleDownloadedSize(module, courseId).then(function(moduleSize) {
+        promises.push($mmCoursePrefetchDelegate.getModuleDownloadedSize(module, courseId).then(function (moduleSize) {
             moduleInfo.size = moduleSize;
             moduleInfo.sizeReadable = $mmText.bytesToSize(moduleSize, 2);
         }));
 
-        promises.push($mmCoursePrefetchDelegate.getModuleTimemodified(module, courseId).then(function(moduleModified) {
+        promises.push($mmCoursePrefetchDelegate.getModuleTimemodified(module, courseId).then(function (moduleModified) {
             moduleInfo.timemodified = moduleModified;
             if (moduleModified > 0) {
                 var now = $mmUtil.timestamp();
@@ -283,7 +275,7 @@ angular.module('mm.core.course')
             }
         }));
 
-        promises.push($mmCoursePrefetchDelegate.getModuleStatus(module, courseId).then(function(moduleStatus) {
+        promises.push($mmCoursePrefetchDelegate.getModuleStatus(module, courseId).then(function (moduleStatus) {
             moduleInfo.status = moduleStatus;
             switch (moduleStatus) {
                 case mmCoreNotDownloaded:
@@ -302,7 +294,7 @@ angular.module('mm.core.course')
         }));
 
         // Get the time it was downloaded (if it was downloaded).
-        promises.push($mmFilepool.getPackageData(siteId, component, module.id).then(function(data) {
+        promises.push($mmFilepool.getPackageData(siteId, component, module.id).then(function (data) {
             if (data && data.downloadtime && (data.status == mmCoreOutdated || data.status == mmCoreDownloaded)) {
                 moduleInfo.downloadtime = data.downloadtime;
                 var now = $mmUtil.timestamp();
@@ -312,7 +304,7 @@ angular.module('mm.core.course')
                     moduleInfo.downloadtimeReadable = moment(data.downloadtime * 1000).calendar();
                 }
             }
-        }).catch(function() {
+        }).catch(function () {
             // Not downloaded.
             moduleInfo.downloadtime = 0;
         }));
@@ -331,8 +323,8 @@ angular.module('mm.core.course')
      * @param {Object} section Section.
      * @return {String}        Section download ID.
      */
-    self.getSectionDownloadId = function(section) {
-        return 'Section-'+section.id;
+    self.getSectionDownloadId = function (section) {
+        return 'Section-' + section.id;
     };
 
     /**
@@ -344,13 +336,13 @@ angular.module('mm.core.course')
      * @param  {Object[]} sections Sections.
      * @return {Object[]}          Modules.
      */
-    self.getSectionsModules = function(sections) {
-        if (!sections || !sections.length) {
+    self.getSectionsModules = function (sections) {
+        if (!sections || !sections.length) {
             return [];
         }
 
         var modules = [];
-        sections.forEach(function(section) {
+        sections.forEach(function (section) {
             if (section.modules) {
                 modules = modules.concat(section.modules);
             }
@@ -369,19 +361,18 @@ angular.module('mm.core.course')
      * @param {Object}  scope               Scope of the view.
      * @return {Boolean}                    If sections has content.
      */
-    self.addContentHandlerControllerForSectionModules = function(sections, courseId, moduleId, completionStatus, scope) {
+    self.addContentHandlerControllerForSectionModules = function (sections, courseId, moduleId, completionStatus, scope) {
         var hasContent = false;
 
-        angular.forEach(sections, function(section) {
+        angular.forEach(sections, function (section) {
             if (!section || !self.sectionHasContent(section)) {
                 return;
             }
 
             hasContent = true;
 
-            angular.forEach(section.modules, function(module) {
-                module._controller =
-                        $mmCourseDelegate.getContentHandlerControllerFor(module.modname, module, courseId, section.id);
+            angular.forEach(section.modules, function (module) {
+                module._controller = $mmCourseDelegate.getContentHandlerControllerFor(module.modname, module, courseId, section.id);
 
                 if (completionStatus && typeof completionStatus[module.id] != 'undefined') {
                     // Check if activity has completions and if it's marked.
@@ -392,7 +383,7 @@ angular.module('mm.core.course')
                 if (module.id == moduleId) {
                     // This is the module we're looking for. Open it.
                     var newScope = scope.$new();
-                    $controller(module._controller, {$scope: newScope});
+                    $controller(module._controller, { $scope: newScope });
                     if (newScope.action) {
                         newScope.action();
                     }
@@ -402,7 +393,7 @@ angular.module('mm.core.course')
         });
 
         return hasContent;
-    }
+    };
 
     /**
      * Retrieves the courseId of the module and navigates to it.
@@ -416,12 +407,12 @@ angular.module('mm.core.course')
      * @param  {Number} [sectionId] Section the module belongs to. If not defined we'll try to retrieve it from the site.
      * @return {Promise}            Promise resolved when the state changes.
      */
-    self.navigateToModule = function(moduleId, siteId, courseId, sectionId) {
+    self.navigateToModule = function (moduleId, siteId, courseId, sectionId) {
         siteId = siteId || $mmSite.getId();
         var modal = $mmUtil.showModalLoading(),
             promise;
 
-        return $mmCourse.canGetModuleWithoutCourseId(siteId).then(function(enabled) {
+        return $mmCourse.canGetModuleWithoutCourseId(siteId).then(function (enabled) {
             if (courseId && sectionId) {
                 // No need to retrieve more data.
                 promise = $q.when();
@@ -430,25 +421,25 @@ angular.module('mm.core.course')
                 promise = $q.reject();
             } else if (!courseId) {
                 // We don't have courseId but WS is enabled.
-                promise = $mmCourse.getModuleBasicInfo(moduleId, siteId).then(function(module) {
+                promise = $mmCourse.getModuleBasicInfo(moduleId, siteId).then(function (module) {
                     courseId = module.course;
                     sectionId = module.section;
                 });
             } else {
                 // We don't have sectionId but we have courseId.
-                promise = $mmCourse.getModuleSectionId(moduleId, courseId, siteId).then(function(id) {
+                promise = $mmCourse.getModuleSectionId(moduleId, courseId, siteId).then(function (id) {
                     sectionId = id;
                 });
             }
 
-            return promise.then(function() {
+            return promise.then(function () {
                 // Get the site.
                 return $mmSitesManager.getSite(siteId);
-            }).then(function(site) {
+            }).then(function (site) {
                 if (courseId == site.getSiteHomeId()) {
                     var $mmaFrontpage = $mmAddonManager.get('$mmaFrontpage');
                     if ($mmaFrontpage && !$mmaFrontpage.isDisabledInSite(site)) {
-                        return $mmaFrontpage.isFrontpageAvailable().then(function() {
+                        return $mmaFrontpage.isFrontpageAvailable().then(function () {
                             // Frontpage is avalaible so redirect to it.
                             return $state.go('redirect', {
                                 siteid: siteId,
@@ -471,10 +462,10 @@ angular.module('mm.core.course')
                     });
                 }
             });
-        }).catch(function(error) {
+        }).catch(function (error) {
             $mmUtil.showErrorModalDefault(error, 'mm.course.errorgetmodule', true);
             return $q.reject();
-        }).finally(function() {
+        }).finally(function () {
             modal.dismiss();
         });
     };
@@ -491,7 +482,7 @@ angular.module('mm.core.course')
      * @param  {Object[]} sections List of sections. Used when downloading all the sections.
      * @return {promise}           Promise resolved when the prefetch is finished.
      */
-    self.prefetch = function(section, courseid, sections) {
+    self.prefetch = function (section, courseid, sections) {
 
         if (section.id != mmCoreCourseAllSectionsId) {
             // Download only this section.
@@ -502,9 +493,9 @@ angular.module('mm.core.course')
             var promises = [];
 
             section.isDownloading = true;
-            angular.forEach(sections, function(s) {
+            angular.forEach(sections, function (s) {
                 if (s.id != mmCoreCourseAllSectionsId) {
-                    promises.push(self.prefetchSection(s, courseid, false, sections).then(function() {
+                    promises.push(self.prefetchSection(s, courseid, false, sections).then(function () {
                         // Calculate only the section that finished.
                         return self.calculateSectionStatus(s, courseid);
                     }));
@@ -531,14 +522,14 @@ angular.module('mm.core.course')
      * @param  {Number}  courseId   Course ID of the module.
      * @return {Promise}            Promise resolved when downloaded.
      */
-    self.prefetchModule = function(scope, service, module, size, refresh, courseId) {
+    self.prefetchModule = function (scope, service, module, size, refresh, courseId) {
         // Show confirmation if needed.
-        return $mmUtil.confirmDownloadSize(size).then(function() {
+        return $mmUtil.confirmDownloadSize(size).then(function () {
             // Invalidate content if refreshing and download the data.
             var promise = refresh ? service.invalidateContent(module.id, courseId) : $q.when();
-            return promise.catch(function() {
+            return promise.catch(function () {
                 // Ignore errors.
-            }).then(function() {
+            }).then(function () {
                 var promise;
 
                 if (service.prefetch) {
@@ -550,7 +541,7 @@ angular.module('mm.core.course')
                     return $q.reject();
                 }
 
-                return promise.catch(function(error) {
+                return promise.catch(function (error) {
                     if (!scope.$$destroyed) {
                         $mmUtil.showErrorModalDefault(error, 'mm.core.errordownloading', true);
                         return $q.reject();
@@ -573,7 +564,7 @@ angular.module('mm.core.course')
      * @param {Object[]} [sections]     List of sections. Used only if singleDownload is true.
      * @return {Promise}                Promise resolved when the section is prefetched.
      */
-    self.prefetchSection = function(section, courseid, singleDownload, sections) {
+    self.prefetchSection = function (section, courseid, singleDownload, sections) {
 
         if (section.id == mmCoreCourseAllSectionsId) {
             return $q.when();
@@ -582,8 +573,8 @@ angular.module('mm.core.course')
         section.isDownloading = true;
 
         // Validate the section needs to be downloaded and calculate amount of modules that need to be downloaded.
-        return $mmCoursePrefetchDelegate.getModulesStatus(section.id, section.modules, courseid).then(function(result) {
-            if (result.status === mmCoreNotDownloaded || result.status === mmCoreOutdated || result.status === mmCoreDownloading) {
+        return $mmCoursePrefetchDelegate.getModulesStatus(section.id, section.modules, courseid).then(function (result) {
+            if (result.status === mmCoreNotDownloaded || result.status === mmCoreOutdated || result.status === mmCoreDownloading) {
                 var promise = self.startOrRestorePrefetch(section, result, courseid);
                 if (singleDownload) {
                     // Re-calculate status to determine the right status for the "All sections" section.
@@ -591,7 +582,7 @@ angular.module('mm.core.course')
                 }
                 return promise;
             }
-        }, function() {
+        }, function () {
             // This shouldn't happen.
             section.isDownloading = false;
             return $q.reject();
@@ -609,7 +600,7 @@ angular.module('mm.core.course')
      * @param {Object} status  Result of $mmCoursePrefetchDelegate#getModulesStatus for this section.
      * @return {Promise}       Promise resolved when the section has been prefetched. Resolve param is true if prevented.
      */
-    self.startOrRestorePrefetch = function(section, status, courseid) {
+    self.startOrRestorePrefetch = function (section, status, courseid) {
 
         if (section.id == mmCoreCourseAllSectionsId) {
             return $q.when(true);
@@ -627,14 +618,14 @@ angular.module('mm.core.course')
         // Set download data.
         section.count = 0;
         section.total = modules.length;
-        section.dwnModuleIds = modules.map(function(m) {
+        section.dwnModuleIds = modules.map(function (m) {
             return m.id;
         });
         section.isDownloading = true;
 
         // We prefetch all the modules to prevent incoeherences in the download count
         // and also to download stale data that might not be marked as outdated.
-        return $mmCoursePrefetchDelegate.prefetchAll(downloadid, modules, courseid).then(undefined, undefined, function(id) {
+        return $mmCoursePrefetchDelegate.prefetchAll(downloadid, modules, courseid).then(undefined, undefined, function (id) {
             // Progress. Check that the module downloaded is one of the expected ones.
             var index = section.dwnModuleIds.indexOf(id);
             if (index > -1) {
@@ -655,9 +646,8 @@ angular.module('mm.core.course')
      * @param {Object} section Section to check.
      * @return {Boolean}       True if the section has content.
      */
-    self.sectionHasContent = function(section) {
-        return !section.hiddenbynumsections && ((typeof section.availabilityinfo != "undefined" && section.availabilityinfo != '') ||
-            section.summary != '' || section.modules.length);
+    self.sectionHasContent = function (section) {
+        return !section.hiddenbynumsections && (typeof section.availabilityinfo != "undefined" && section.availabilityinfo != '' || section.summary != '' || section.modules.length);
     };
 
     /**
@@ -670,8 +660,8 @@ angular.module('mm.core.course')
      * @param {Number} courseId  Course ID the module belongs to.
      * @return {Promise}         Promise resolved when done.
      */
-    self.confirmAndRemove = function(module, courseId) {
-        return $mmUtil.showConfirm($translate('mm.course.confirmdeletemodulefiles')).then(function() {
+    self.confirmAndRemove = function (module, courseId) {
+        return $mmUtil.showConfirm($translate('mm.course.confirmdeletemodulefiles')).then(function () {
             return $mmCoursePrefetchDelegate.removeModuleFiles(module, courseId);
         });
     };
@@ -688,22 +678,22 @@ angular.module('mm.core.course')
      * @param {Number} courseId Course ID the module belongs to.
      * @return {Promise}        Promise resolved when done.
      */
-    self.contextMenuPrefetch = function(scope, module, courseId) {
+    self.contextMenuPrefetch = function (scope, module, courseId) {
         var icon = scope.prefetchStatusIcon;
 
         scope.prefetchStatusIcon = 'spinner'; // Show spinner since this operation might take a while.
         // We need to call getDownloadSize, the package might have been updated.
-        return $mmCoursePrefetchDelegate.getModuleDownloadSize(module, courseId).then(function(size) {
-            return $mmUtil.confirmDownloadSize(size).then(function() {
-                return $mmCoursePrefetchDelegate.prefetchModule(module, courseId).catch(function(error) {
+        return $mmCoursePrefetchDelegate.getModuleDownloadSize(module, courseId).then(function (size) {
+            return $mmUtil.confirmDownloadSize(size).then(function () {
+                return $mmCoursePrefetchDelegate.prefetchModule(module, courseId).catch(function (error) {
                     return failPrefetch(!scope.$$destroyed, error);
                 });
-            }, function() {
+            }, function () {
                 // User hasn't confirmed, stop spinner.
                 scope.prefetchStatusIcon = icon;
                 return failPrefetch(false);
             });
-        }, function(error) {
+        }, function (error) {
             return failPrefetch(true, error);
         });
 
@@ -730,8 +720,8 @@ angular.module('mm.core.course')
      * @param  {String} [component]             Component of the module.
      * @return {Promise}                        Promise resolved when done.
      */
-    self.fillContextMenu = function(scope, module, courseId, invalidateCache, component) {
-        return self.getModulePrefetchInfo(module, courseId, invalidateCache, component).then(function(moduleInfo) {
+    self.fillContextMenu = function (scope, module, courseId, invalidateCache, component) {
+        return self.getModulePrefetchInfo(module, courseId, invalidateCache, component).then(function (moduleInfo) {
             scope.size = moduleInfo.size > 0 ? moduleInfo.sizeReadable : 0;
             scope.prefetchStatusIcon = moduleInfo.statusIcon;
 
@@ -748,13 +738,13 @@ angular.module('mm.core.course')
             }
 
             if (typeof scope.statusObserver == 'undefined' && component) {
-                scope.statusObserver = $mmEvents.on(mmCoreEventPackageStatusChanged, function(data) {
+                scope.statusObserver = $mmEvents.on(mmCoreEventPackageStatusChanged, function (data) {
                     if (data.siteid === $mmSite.getId() && data.componentId === module.id && data.component === component) {
                         self.fillContextMenu(scope, module, courseId, false, component);
                     }
                 });
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', function () {
                     scope.statusObserver && scope.statusObserver.off && scope.statusObserver.off();
                 });
             }
@@ -762,10 +752,9 @@ angular.module('mm.core.course')
     };
 
     return self;
-})
-
-.run(function($mmEvents, mmCoreEventLogout, $mmCourseHelper) {
-    $mmEvents.on(mmCoreEventLogout, function() {
+}).run(function ($mmEvents, mmCoreEventLogout, $mmCourseHelper) {
+    $mmEvents.on(mmCoreEventLogout, function () {
         $mmCourseHelper.setDownloadSectionsEnabled(false);
     });
 });
+//# sourceMappingURL=helper.js.map

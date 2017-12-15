@@ -14,5 +14,9 @@
     "www/index.html",
     "!www/lib/**/*"
   ],
-  "defaultBrowser": "google chrome"
+  "defaultBrowser": "google chrome",
+  "integrations": {
+    "gulp": {}
+  },
+  "type": "ionic1"
 }

@@ -92,6 +92,7 @@ function treatFile(file, data) {
  */
 function treatMergedData(data) {
   var merged = {};
+  var mergedOrdered = {};
 
   for (var filepath in data) {
 
@@ -130,7 +131,12 @@ function treatMergedData(data) {
     }
   }
 
-  return new Buffer(JSON.stringify(merged, null, 4));
+  // Force ordering by string key.
+  Object.keys(merged).sort().forEach(function(k){
+    mergedOrdered[k] = merged[k];
+  });
+
+  return new Buffer(JSON.stringify(mergedOrdered, null, 4));
 }
 
 /**
@@ -398,6 +404,8 @@ var remoteAddonPaths = {
 
 gulp.task('default', ['build', 'sass', 'lang', 'config']);
 
+gulp.task('serve:before', ['default', 'watch']);
+
 gulp.task('sass-build', function(done) {
   gulp.src(paths.sass.core)
     .pipe(concat('mm.bundle.scss'))
@@ -410,7 +418,7 @@ gulp.task('sass', ['sass-build'], function(done) {
     .pipe(concat('mm.bundle.css'))
     .pipe(sass())
     .pipe(gulp.dest(paths.build))
-    .pipe(minifyCss({
+    .pipe(cleanCSS({
       keepSpecialComments: 0
     }))
     .pipe(rename({ extname: '.min.css' }))
@@ -760,13 +768,16 @@ gulp.task('remoteaddon-build', ['remoteaddon-copy'], function(done) {
   pathToReplace = newYargs.argv.jspath;
   if (typeof pathToReplace == 'undefined') {
     if (path.indexOf('www') === 0) {
-      pathToReplace = path.replace('www/', '');
+      pathToReplace = path.replace(/www[\/\\]/, '');
     } else {
       pathToReplace = path;
     }
   }
 
   jsPaths = getRemoteAddonPaths(remoteAddonPaths.js, path);
+
+  // Convert all backslash (\) to slash (/) to make it work in Windows.
+  pathToReplace = pathToReplace.replace(/\\/g, '/');
 
   if (pathToReplace.slice(-1) == '/') {
     wildcard = wildcard + '/';
@@ -897,4 +908,47 @@ gulp.task('remoteaddon', ['remoteaddon-build', 'remoteaddon-sass', 'remoteaddon-
     });
 });
 
-gulp.task('serve:before', ['default', 'watch']);
+// Cleans the development environment by deleting downloaded files and libraries
+gulp.task('clean-libs', ['clean-www-libs', 'clean-ionic-platforms', 'clean-e2e-build', 'clean-sass-cache', 'clean-ionic-plugins']);
+
+// Removes the contents in the /www/lib/ directory
+gulp.task('clean-www-libs', function() {
+  return gulp.src('www/lib/', {read: false})
+    .pipe(clean());
+});
+
+// Removes the contents in the /platforms directory
+gulp.task('clean-ionic-platforms', function() {
+  return gulp.src('platforms/', {read: false})
+    .pipe(clean());
+});
+
+// Removes the contents in the /plugins directory
+gulp.task('clean-ionic-plugins', function() {
+  return gulp.src('plugins/', {read: false})
+    .pipe(clean());
+});
+
+// Removes the contents in the /www/build directory
+gulp.task('clean-build', function() {
+  return gulp.src('www/build/', {read: false})
+    .pipe(clean());
+});
+
+// Removes the contents in the /e2e/build directory
+gulp.task('clean-e2e-build', function() {
+  return gulp.src('e2e/build/', {read: false})
+    .pipe(clean());
+});
+
+// Removes the contents in the /.sass-cache directory
+gulp.task('clean-sass-cache', function() {
+  return gulp.src('.sass-cache/', {read: false})
+    .pipe(clean());
+});
+
+// Removes the contents in the /node-modules directory
+gulp.task('clean-node-modules', function() {
+  return gulp.src('node_modules/', {read: false})
+    .pipe(clean());
+});

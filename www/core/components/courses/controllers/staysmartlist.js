@@ -21,7 +21,7 @@ angular.module('mm.core.courses')
  * @ngdoc controller
  * @name mmCoursesListCtrl
  */
-.controller('mmCoursesListCtrl', function ($scope, $mmCourses, $mmCoursesDelegate, $mmUtil, $mmEvents, $mmSite, $q, mmCoursesEventMyCoursesUpdated, mmCoreEventSiteUpdated, $log) {
+.controller('mmCoursesListStaySmartCtrl', function ($scope, $mmCourses, $mmCoursesDelegate, $mmUtil, $mmEvents, $mmSite, $q, mmCoursesEventMyCoursesUpdated, mmCoreEventSiteUpdated, $log) {
 
     var updateSiteObserver, myCoursesObserver;
 

@@ -41,6 +41,6 @@ describe('User can search courses', function () {
             expect(element(by.css('[aria-label="Search"]')).isEnabled()).toBe(false);
             done();
         });
-
     });
 });
+//# sourceMappingURL=courses.spec.js.map

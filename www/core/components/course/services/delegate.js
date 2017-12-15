@@ -38,7 +38,7 @@ angular.module('mm.core.course')
  * parent scope. To find out more what scope variables are expected look at the template
  * core/components/course/templates/section.html and at existing content handlers.
  */
-.provider('$mmCourseDelegate', function() {
+.provider('$mmCourseDelegate', function () {
     var contentHandlers = {},
         self = {};
 
@@ -58,7 +58,7 @@ angular.module('mm.core.course')
      *                                                                See core/components/course/templates/section.html
      *                                                                for the list of scope variables expected.
      */
-    self.registerContentHandler = function(addon, handles, handler) {
+    self.registerContentHandler = function (addon, handles, handler) {
         if (typeof contentHandlers[handles] !== 'undefined') {
             console.log("$mmCourseDelegateProvider: Addon '" + contentHandlers[handles].addon + "' already registered as handler for '" + handles + "'");
             return false;
@@ -72,7 +72,7 @@ angular.module('mm.core.course')
         return true;
     };
 
-    self.$get = function($q, $log, $mmSite, $mmUtil, $mmCourseContentHandler) {
+    self.$get = function ($q, $log, $mmSite, $mmUtil, $mmCourseContentHandler) {
         var enabledHandlers = {},
             self = {},
             lastUpdateHandlersStart = {};
@@ -95,7 +95,7 @@ angular.module('mm.core.course')
          * @param {Number} sectionid The section ID.
          * @return {Object}
          */
-        self.getContentHandlerControllerFor = function(handles, module, courseid, sectionid) {
+        self.getContentHandlerControllerFor = function (handles, module, courseid, sectionid) {
             if (typeof enabledHandlers[handles] !== 'undefined') {
                 return enabledHandlers[handles].getController(module, courseid, sectionid);
             }
@@ -111,7 +111,7 @@ angular.module('mm.core.course')
          * @param {String} handles   The module to work on
          * @return {Boolean} If the controller is installed or not.
          */
-        self.hasContentHandler = function(handles) {
+        self.hasContentHandler = function (handles) {
             return typeof contentHandlers[handles] !== 'undefined';
         };
 
@@ -125,8 +125,8 @@ angular.module('mm.core.course')
          * @param {String} [siteId] Site ID. If not defined, current site.
          * @return {Promise}        True if disabled, false otherwise.
          */
-        self.isModuleDisabled = function(handles, siteId) {
-            return $mmSitesManager.getSite(siteId).then(function(site) {
+        self.isModuleDisabled = function (handles, siteId) {
+            return $mmSitesManager.getSite(siteId).then(function (site) {
                 return self.isModuleDisabledInSite(handles, site);
             });
         };
@@ -141,7 +141,7 @@ angular.module('mm.core.course')
          * @param  {Object} [site]  Site. If not defined, use current site.
          * @return {Boolean}        True if disabled, false otherwise.
          */
-        self.isModuleDisabledInSite = function(handles, site) {
+        self.isModuleDisabledInSite = function (handles, site) {
             site = site || $mmSite;
 
             if (typeof contentHandlers[handles] !== 'undefined') {
@@ -160,7 +160,7 @@ angular.module('mm.core.course')
          * @param  {Number}  time Time to check.
          * @return {Boolean}      True if equal, false otherwise.
          */
-        self.isLastUpdateCall = function(time) {
+        self.isLastUpdateCall = function (time) {
             if (!lastUpdateHandlersStart) {
                 return true;
             }
@@ -179,7 +179,7 @@ angular.module('mm.core.course')
          * @return {Promise} Resolved when enabled, rejected when not.
          * @protected
          */
-        self.updateContentHandler = function(handles, handlerInfo, time) {
+        self.updateContentHandler = function (handles, handlerInfo, time) {
             var promise,
                 siteId = $mmSite.getId();
 
@@ -196,9 +196,9 @@ angular.module('mm.core.course')
             }
 
             // Checks if the content is enabled.
-            return promise.catch(function() {
+            return promise.catch(function () {
                 return false;
-            }).then(function(enabled) {
+            }).then(function (enabled) {
                 // Verify that this call is the last one that was started.
                 if (self.isLastUpdateCall(time) && $mmSite.isLoggedIn() && $mmSite.getId() === siteId) {
                     if (enabled) {
@@ -219,7 +219,7 @@ angular.module('mm.core.course')
          * @return {Promise} Resolved when done.
          * @protected
          */
-        self.updateContentHandlers = function() {
+        self.updateContentHandlers = function () {
             var promises = [],
                 now = new Date().getTime();
 
@@ -228,13 +228,13 @@ angular.module('mm.core.course')
             lastUpdateHandlersStart = now;
 
             // Loop over all the content handlers.
-            angular.forEach(contentHandlers, function(handlerInfo, handles) {
+            angular.forEach(contentHandlers, function (handlerInfo, handles) {
                 promises.push(self.updateContentHandler(handles, handlerInfo, now));
             });
 
-            return $q.all(promises).then(function() {
+            return $q.all(promises).then(function () {
                 return true;
-            }, function() {
+            }, function () {
                 // Never reject.
                 return true;
             });
@@ -243,6 +243,6 @@ angular.module('mm.core.course')
         return self;
     };
 
-
     return self;
 });
+//# sourceMappingURL=delegate.js.map

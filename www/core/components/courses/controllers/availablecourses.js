@@ -21,35 +21,36 @@ angular.module('mm.core.courses')
  * @ngdoc controller
  * @name mmCoursesAvailableCtrl
  */
-.controller('mmCoursesAvailableCtrl', function($scope, $mmCourses, $q, $mmUtil, $mmSite) {
+.controller('mmCoursesAvailableCtrl', function ($scope, $mmCourses, $q, $mmUtil, $mmSite) {
 
     // Convenience function to search courses.
     function loadCourses() {
         var frontpageCourseId = $mmSite.getSiteHomeId();
-        return $mmCourses.getCoursesByField().then(function(courses) {
-            $scope.courses = courses.filter(function(course) {
+        return $mmCourses.getCoursesByField().then(function (courses) {
+            $scope.courses = courses.filter(function (course) {
                 return course.id != frontpageCourseId;
             });
-        }).catch(function(message) {
+        }).catch(function (message) {
             $mmUtil.showErrorModalDefault(message, 'mm.courses.errorloadcourses', true);
             return $q.reject();
         });
     }
 
-    loadCourses().finally(function() {
+    loadCourses().finally(function () {
         $scope.coursesLoaded = true;
     });
 
-    $scope.refreshCourses = function() {
+    $scope.refreshCourses = function () {
         var promises = [];
 
         promises.push($mmCourses.invalidateUserCourses());
         promises.push($mmCourses.invalidateCoursesByField());
 
-        $q.all(promises).finally(function() {
-            loadCourses().finally(function() {
+        $q.all(promises).finally(function () {
+            loadCourses().finally(function () {
                 $scope.$broadcast('scroll.refreshComplete');
             });
         });
     };
 });
+//# sourceMappingURL=availablecourses.js.map

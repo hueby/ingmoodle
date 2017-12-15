@@ -12,17 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-angular.module('mm.core.course', ['mm.core.courses'])
+angular.module('mm.core.course', ['mm.core.courses']).constant('mmCoreCoursePriority', 800).constant('mmCoreCourseAllSectionsId', -1).config(function ($stateProvider) {
 
-.constant('mmCoreCoursePriority', 800)
-.constant('mmCoreCourseAllSectionsId', -1)
-
-.config(function($stateProvider) {
-
-    $stateProvider
-
-  
-    .state('site.mm_course', {
+    $stateProvider.state('site.mm_course', {
         url: '/mm_course',
         params: {
             courseid: null,
@@ -38,7 +30,22 @@ angular.module('mm.core.course', ['mm.core.courses'])
             }
         }
     })
-
+    // .state('site.mm_course_staysmart', {
+    //   url: '/mm_course_staysmart',
+    //     params: {
+    //         courseid: null,
+    //         sid: null, // Section to load. Not naming it sectionid because it collides with 'mm_course-section' param in split-view.
+    //         sectionnumber: null, // Section to load. If sid is provided there is no need to provide sectionnumber and vice versa.
+    //         moduleid: null, // Module to load.
+    //         course: null
+    //     },
+    //     views: {
+    //         'site': {
+    //             templateUrl: 'core/components/course/templates/sections.html',
+    //             controller: 'mmCourseSectionsStaySmartCtrl'
+    //         }
+    //     }
+    // })
     .state('site.mm_course-section', {
         url: '/mm_course-section',
         params: {
@@ -52,9 +59,7 @@ angular.module('mm.core.course', ['mm.core.courses'])
                 controller: 'mmCourseSectionCtrl'
             }
         }
-    })
-
-    .state('site.mm_course-modcontent', {
+    }).state('site.mm_course-modcontent', {
         url: '/mm_course-modcontent',
         params: {
             module: null
@@ -66,10 +71,9 @@ angular.module('mm.core.course', ['mm.core.courses'])
             }
         }
     });
-})
-
-.run(function($mmEvents, mmCoreEventLogin, mmCoreEventSiteUpdated, $mmCourseDelegate, mmCoreEventRemoteAddonsLoaded) {
+}).run(function ($mmEvents, mmCoreEventLogin, mmCoreEventSiteUpdated, $mmCourseDelegate, mmCoreEventRemoteAddonsLoaded) {
     $mmEvents.on(mmCoreEventLogin, $mmCourseDelegate.updateContentHandlers);
     $mmEvents.on(mmCoreEventSiteUpdated, $mmCourseDelegate.updateContentHandlers);
     $mmEvents.on(mmCoreEventRemoteAddonsLoaded, $mmCourseDelegate.updateContentHandlers);
 });
+//# sourceMappingURL=main.js.map

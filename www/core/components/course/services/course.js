@@ -12,17 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-angular.module('mm.core.course')
+angular.module('mm.core.course').constant('mmCoreCourseModulesStore', 'course_modules') // @deprecated since version 2.6. Please do not use.
 
-.constant('mmCoreCourseModulesStore', 'course_modules') // @deprecated since version 2.6. Please do not use.
-
-.config(function($mmSitesFactoryProvider, mmCoreCourseModulesStore) {
-    var stores = [
-        {
-            name: mmCoreCourseModulesStore,
-            keyPath: 'id'
-        }
-    ];
+.config(function ($mmSitesFactoryProvider, mmCoreCourseModulesStore) {
+    var stores = [{
+        name: mmCoreCourseModulesStore,
+        keyPath: 'id'
+    }];
     $mmSitesFactoryProvider.registerStores(stores);
 })
 
@@ -33,15 +29,12 @@ angular.module('mm.core.course')
  * @ngdoc service
  * @name $mmCourse
  */
-.factory('$mmCourse', function($mmSite, $translate, $q, $log, $mmEvents, $mmSitesManager, mmCoreEventCompletionModuleViewed) {
+.factory('$mmCourse', function ($mmSite, $translate, $q, $log, $mmEvents, $mmSitesManager, mmCoreEventCompletionModuleViewed) {
 
     $log = $log.getInstance('$mmCourse');
 
     var self = {},
-        mods = ["assign", "assignment", "book", "chat", "choice", "data", "database", "date", "external-tool",
-            "feedback", "file", "folder", "forum", "glossary", "ims", "imscp", "label", "lesson", "lti", "page", "quiz",
-            "resource", "scorm", "survey", "url", "wiki", "workshop"
-        ],
+        mods = ["assign", "assignment", "book", "chat", "choice", "data", "database", "date", "external-tool", "feedback", "file", "folder", "forum", "glossary", "ims", "imscp", "label", "lesson", "lti", "page", "quiz", "resource", "scorm", "survey", "url", "wiki", "workshop"],
         modsWithContent = ['book', 'folder', 'imscp', 'page', 'resource', 'url'];
 
     /**
@@ -67,10 +60,10 @@ angular.module('mm.core.course')
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with true if can return it, rejected or resolved with false otherwise.
      */
-    self.canGetModuleWithoutCourseId = function(siteId) {
+    self.canGetModuleWithoutCourseId = function (siteId) {
         siteId = siteId || $mmSite.getId();
 
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.wsAvailable('core_course_get_course_module');
         });
     };
@@ -84,10 +77,10 @@ angular.module('mm.core.course')
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with true if can return it, rejected or resolved with false otherwise.
      */
-    self.canGetModuleByInstance = function(siteId) {
+    self.canGetModuleByInstance = function (siteId) {
         siteId = siteId || $mmSite.getId();
 
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.wsAvailable('core_course_get_course_module_by_instance');
         });
     };
@@ -102,9 +95,9 @@ angular.module('mm.core.course')
      * @param {Number} courseId   Course ID.
      * @param {Object} completion Completion status of the module.
      */
-    self.checkModuleCompletion = function(courseId, completion) {
+    self.checkModuleCompletion = function (courseId, completion) {
         if (completion && completion.tracking === 2 && completion.state === 0) {
-            self.invalidateSections(courseId).finally(function() {
+            self.invalidateSections(courseId).finally(function () {
                 $mmEvents.trigger(mmCoreEventCompletionModuleViewed, courseId);
             });
         }
@@ -120,23 +113,23 @@ angular.module('mm.core.course')
      * @param  {Number} [userid] User ID. If not defined, current user.
      * @return {Promise}         Promise resolved with the completion statuses: object where the key is module ID.
      */
-    self.getActivitiesCompletionStatus = function(courseid, userid) {
+    self.getActivitiesCompletionStatus = function (courseid, userid) {
         userid = userid || $mmSite.getUserId();
 
         $log.debug('Getting completion status for user ' + userid + ' in course ' + courseid);
 
         var params = {
-                courseid: courseid,
-                userid: userid
-            },
+            courseid: courseid,
+            userid: userid
+        },
             preSets = {
-                cacheKey: getActivitiesCompletionCacheKey(courseid, userid)
-            };
+            cacheKey: getActivitiesCompletionCacheKey(courseid, userid)
+        };
 
-        return $mmSite.read('core_completion_get_activities_completion_status', params, preSets).then(function(data) {
+        return $mmSite.read('core_completion_get_activities_completion_status', params, preSets).then(function (data) {
             if (data && data.statuses) {
                 var formattedStatuses = {};
-                angular.forEach(data.statuses, function(status) {
+                angular.forEach(data.statuses, function (status) {
                     formattedStatuses[status.cmid] = status;
                 });
                 return formattedStatuses;
@@ -166,17 +159,17 @@ angular.module('mm.core.course')
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with the module's info.
      */
-    self.getModuleBasicInfo = function(moduleId, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.getModuleBasicInfo = function (moduleId, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             var params = {
-                    cmid: moduleId
-                },
+                cmid: moduleId
+            },
                 preSets = {
-                    cacheKey: getModuleCacheKey(moduleId)
-                };
+                cacheKey: getModuleCacheKey(moduleId)
+            };
 
-            return site.read('core_course_get_course_module', params, preSets).then(function(response) {
-                if (response.cm && (!response.warnings || !response.warnings.length)) {
+            return site.read('core_course_get_course_module', params, preSets).then(function (response) {
+                if (response.cm && (!response.warnings || !response.warnings.length)) {
                     return response.cm;
                 }
                 return $q.reject();
@@ -194,8 +187,8 @@ angular.module('mm.core.course')
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with the module's grade info.
      */
-    self.getModuleBasicGradeInfo = function(moduleId, siteId) {
-        return self.getModuleBasicInfo(moduleId, siteId).then(function(info) {
+    self.getModuleBasicGradeInfo = function (moduleId, siteId) {
+        return self.getModuleBasicInfo(moduleId, siteId).then(function (info) {
             var grade = {
                 advancedgrading: info.advancedgrading || false,
                 grade: info.grade || false,
@@ -223,20 +216,20 @@ angular.module('mm.core.course')
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with the module's info.
      */
-    self.getModuleBasicInfoByInstance = function(id, module, siteId) {
+    self.getModuleBasicInfoByInstance = function (id, module, siteId) {
         siteId = siteId || $mmSite.getId();
 
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             var params = {
-                    instance: id,
-                    module: module
-                },
+                instance: id,
+                module: module
+            },
                 preSets = {
-                    cacheKey: getModuleByInstanceCacheKey(id, module)
-                };
+                cacheKey: getModuleByInstanceCacheKey(id, module)
+            };
 
-            return site.read('core_course_get_course_module_by_instance', params, preSets).then(function(response) {
-                if (response.cm && (!response.warnings || !response.warnings.length)) {
+            return site.read('core_course_get_course_module_by_instance', params, preSets).then(function (response) {
+                if (response.cm && (!response.warnings || !response.warnings.length)) {
                     return response.cm;
                 }
                 return $q.reject();
@@ -258,7 +251,7 @@ angular.module('mm.core.course')
      * @param  {String} [siteId]       Site ID. If not defined, current site.
      * @return {Promise}               Promise resolved with the module.
      */
-    self.getModule = function(moduleId, courseId, sectionId, preferCache, ignoreCache, siteId) {
+    self.getModule = function (moduleId, courseId, sectionId, preferCache, ignoreCache, siteId) {
         siteId = siteId || $mmSite.getId();
 
         if (!moduleId) {
@@ -273,30 +266,28 @@ angular.module('mm.core.course')
 
         if (!courseId) {
             // No courseId passed, try to retrieve it.
-            promise = self.getModuleBasicInfo(moduleId, siteId).then(function(module) {
+            promise = self.getModuleBasicInfo(moduleId, siteId).then(function (module) {
                 return module.course;
             });
         } else {
             promise = $q.when(courseId);
         }
 
-        return promise.then(function(cid) {
+        return promise.then(function (cid) {
             courseId = cid;
 
             // Get the site.
             return $mmSitesManager.getSite(siteId);
-        }).then(function(site) {
+        }).then(function (site) {
             // We have courseId, we can use core_course_get_contents for compatibility.
             $log.debug('Getting module ' + moduleId + ' in course ' + courseId);
 
             params = {
                 courseid: courseId,
-                options: [
-                    {
-                        name: 'cmid',
-                        value: moduleId
-                    }
-                ]
+                options: [{
+                    name: 'cmid',
+                    value: moduleId
+                }]
             };
             preSets = {
                 cacheKey: getModuleCacheKey(moduleId),
@@ -315,12 +306,11 @@ angular.module('mm.core.course')
                 });
             }
 
-            return site.read('core_course_get_contents', params, preSets).catch(function() {
+            return site.read('core_course_get_contents', params, preSets).catch(function () {
                 // Error getting the module. Try to get all contents (without filtering by module).
                 return self.getSections(courseId, false, false, preSets, siteId);
-            }).then(function(sections) {
-                var section,
-                    module;
+            }).then(function (sections) {
+                var section, module;
 
                 for (var i = 0; i < sections.length; i++) {
                     section = sections[i];
@@ -367,7 +357,7 @@ angular.module('mm.core.course')
      * @param {String} moduleName The module name.
      * @return {String} The IMG src.
      */
-    self.getModuleIconSrc = function(moduleName) {
+    self.getModuleIconSrc = function (moduleName) {
         if (mods.indexOf(moduleName) < 0) {
             moduleName = "external-tool";
         }
@@ -386,23 +376,23 @@ angular.module('mm.core.course')
      * @param {String} [siteId]   Site ID. If not defined, current site.
      * @return {Promise}
      */
-    self.getModuleSectionId = function(moduleId, courseId, siteId) {
+    self.getModuleSectionId = function (moduleId, courseId, siteId) {
 
         if (!moduleId) {
             return $q.reject();
         }
 
         // Try to get the section using getModuleBasicInfo.
-        return self.getModuleBasicInfo(moduleId, siteId).then(function(module) {
+        return self.getModuleBasicInfo(moduleId, siteId).then(function (module) {
             return module.section;
-        }).catch(function() {
+        }).catch(function () {
             if (!courseId) {
                 // It failed and we don't have courseId, reject.
                 return $q.reject();
             }
 
             // Get all the sections in the course and iterate over them to find it.
-            return self.getSections(courseId, false, true, {}, siteId).then(function(sections) {
+            return self.getSections(courseId, false, true, {}, siteId).then(function (sections) {
                 for (var i = 0, seclen = sections.length; i < seclen; i++) {
                     var section = sections[i];
                     for (var j = 0, modlen = section.modules.length; j < modlen; j++) {
@@ -429,12 +419,12 @@ angular.module('mm.core.course')
      * @param {Number} sectionId        The section ID.
      * @return {Promise}                Promise resolved with the section.
      */
-    self.getSection = function(courseId, excludeModules, excludeContents, sectionId) {
+    self.getSection = function (courseId, excludeModules, excludeContents, sectionId) {
         if (sectionId < 0) {
             return $q.reject('Invalid section ID');
         }
 
-        return self.getSections(courseId, excludeModules, excludeContents).then(function(sections) {
+        return self.getSections(courseId, excludeModules, excludeContents).then(function (sections) {
             for (var i = 0; i < sections.length; i++) {
                 if (sections[i].id == sectionId) {
                     return sections[i];
@@ -458,27 +448,24 @@ angular.module('mm.core.course')
      * @param {String} [siteId]         Site ID. If not defined, current site.
      * @return {Promise}                The reject contains the error message, else contains the sections.
      */
-    self.getSections = function(courseId, excludeModules, excludeContents, preSets, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.getSections = function (courseId, excludeModules, excludeContents, preSets, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             preSets = preSets || {};
             preSets.cacheKey = getSectionsCacheKey(courseId);
             preSets.getCacheUsingCacheKey = true; // This is to make sure users don't lose offline access when updating.
 
-            var options = [
-                    {
-                        name: 'excludemodules',
-                        value: excludeModules ? 1 : 0
-                    },
-                    {
-                        name: 'excludecontents',
-                        value: excludeContents ? 1 : 0
-                    }
-                ];
+            var options = [{
+                name: 'excludemodules',
+                value: excludeModules ? 1 : 0
+            }, {
+                name: 'excludecontents',
+                value: excludeContents ? 1 : 0
+            }];
 
             return site.read('core_course_get_contents', {
                 courseid: courseId,
                 options: options
-            }, preSets).then(function(sections) {
+            }, preSets).then(function (sections) {
                 var siteHomeId = site.getSiteHomeId(),
                     showSections = true;
 
@@ -491,13 +478,12 @@ angular.module('mm.core.course')
                     sections.pop();
                 }
 
-                angular.forEach(sections, function(section) {
-                    angular.forEach(section.modules, function(module) {
+                angular.forEach(sections, function (section) {
+                    angular.forEach(section.modules, function (module) {
                         addContentsIfNeeded(module);
                     });
                 });
                 return sections;
-
             });
         });
     };
@@ -522,8 +508,8 @@ angular.module('mm.core.course')
      * @param {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}        Promise resolved when the data is invalidated.
      */
-    self.invalidateModule = function(moduleId, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateModule = function (moduleId, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getModuleCacheKey(moduleId));
         });
     };
@@ -539,8 +525,8 @@ angular.module('mm.core.course')
      * @param {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}      Promise resolved when the data is invalidated.
      */
-    self.invalidateModuleByInstance = function(id, module, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateModuleByInstance = function (id, module, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getModuleByInstanceCacheKey(id, module));
         });
     };
@@ -556,8 +542,8 @@ angular.module('mm.core.course')
      * @param {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved when the data is invalidated.
      */
-    self.invalidateSections = function(courseId, userId, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateSections = function (courseId, userId, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             var promises = [],
                 siteHomeId = site.getSiteHomeId();
 
@@ -586,7 +572,7 @@ angular.module('mm.core.course')
      * @param  {String} [siteId]       Site ID. If not defined, current site.
      * @return {Promise}               Promise resolved when loaded.
      */
-    self.loadModuleContents = function(module, courseId, sectionId, preferCache, ignoreCache, siteId) {
+    self.loadModuleContents = function (module, courseId, sectionId, preferCache, ignoreCache, siteId) {
         siteId = siteId || $mmSite.getId();
 
         if (!ignoreCache && module.contents && module.contents.length) {
@@ -594,11 +580,11 @@ angular.module('mm.core.course')
             return $q.when();
         }
 
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             if (site.isVersionGreaterEqualThan('2.9')) {
                 // From Moodle 2.9 the course contents can be filtered, so maybe the module doesn't have contents
                 // because they were filtered. Try to get its contents.
-                return self.getModule(module.id, courseId, sectionId, preferCache, ignoreCache, siteId).then(function(mod) {
+                return self.getModule(module.id, courseId, sectionId, preferCache, ignoreCache, siteId).then(function (mod) {
                     module.contents = mod.contents;
                 });
             }
@@ -615,7 +601,7 @@ angular.module('mm.core.course')
      * @param {Number} [section] Section number.
      * @return {Promise}         Promise resolved when the WS call is successful.
      */
-    self.logView = function(courseId, section) {
+    self.logView = function (courseId, section) {
         var params = {
             courseid: courseId
         };
@@ -623,7 +609,7 @@ angular.module('mm.core.course')
             params.sectionnumber = section;
         }
 
-        return $mmSite.write('core_course_view_course', params).then(function(response) {
+        return $mmSite.write('core_course_view_course', params).then(function (response) {
             if (!response.status) {
                 return $q.reject();
             }
@@ -639,7 +625,7 @@ angular.module('mm.core.course')
      * @param {String} moduleName The module name.
      * @return {String}           Translated name.
      */
-    self.translateModuleName = function(moduleName) {
+    self.translateModuleName = function (moduleName) {
         if (mods.indexOf(moduleName) < 0) {
             moduleName = "external-tool";
         }
@@ -650,6 +636,6 @@ angular.module('mm.core.course')
         return translated !== langKey ? translated : moduleName;
     };
 
-
     return self;
 });
+//# sourceMappingURL=course.js.map

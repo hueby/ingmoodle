@@ -30,7 +30,7 @@ angular.module('mm.core.course')
  *
  * <mm-course-module module="module" completion-changed="completionChanged"></mm-course-module>
  */
-.directive('mmCourseModule', function() {
+.directive('mmCourseModule', function () {
     return {
         restrict: 'E',
         scope: {
@@ -40,3 +40,4 @@ angular.module('mm.core.course')
         templateUrl: 'core/components/course/templates/module.html'
     };
 });
+//# sourceMappingURL=module.js.map

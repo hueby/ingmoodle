@@ -21,16 +21,16 @@ angular.module('mm.core.courses')
  * @ngdoc controller
  * @name mmCourseCategoriesCtrl
  */
-.controller('mmCourseCategoriesCtrl', function($scope, $stateParams, $mmCourses, $mmUtil, $q, $mmSite) {
+.controller('mmCourseCategoriesCtrl', function ($scope, $stateParams, $mmCourses, $mmUtil, $q, $mmSite) {
 
     var categoryId = $stateParams.categoryid || 0;
 
     // Convenience function to fetch categories.
     function fetchCategories() {
-        return $mmCourses.getCategories(categoryId, true).then(function(cats) {
+        return $mmCourses.getCategories(categoryId, true).then(function (cats) {
             $scope.currentCategory = false;
 
-            angular.forEach(cats, function(cat, index) {
+            angular.forEach(cats, function (cat, index) {
                 if (cat.id == categoryId) {
                     $scope.currentCategory = cat;
                     // Delete current Category to avoid problems with the formatTree.
@@ -39,9 +39,9 @@ angular.module('mm.core.courses')
             });
 
             // Sort by depth and sortorder to avoid problems formatting Tree.
-            cats.sort(function(a,b) {
+            cats.sort(function (a, b) {
                 if (a.depth == b.depth) {
-                    return (a.sortorder > b.sortorder) ? 1 : ((b.sortorder > a.sortorder) ? -1 : 0);
+                    return a.sortorder > b.sortorder ? 1 : b.sortorder > a.sortorder ? -1 : 0;
                 }
                 return a.depth > b.depth ? 1 : -1;
             });
@@ -51,22 +51,22 @@ angular.module('mm.core.courses')
             if ($scope.currentCategory) {
                 $scope.title = $scope.currentCategory.name;
 
-                return $mmCourses.getCoursesByField('category', categoryId).then(function(courses) {
+                return $mmCourses.getCoursesByField('category', categoryId).then(function (courses) {
                     $scope.courses = courses;
-                }, function(error) {
+                }, function (error) {
                     $mmUtil.showErrorModalDefault(error, 'mm.courses.errorloadcourses', true);
                 });
             }
-        }, function(error) {
+        }, function (error) {
             $mmUtil.showErrorModalDefault(error, 'mm.courses.errorloadcategories', true);
         });
     }
 
-    fetchCategories().finally(function() {
+    fetchCategories().finally(function () {
         $scope.categoriesLoaded = true;
     });
 
-    $scope.refreshCategories = function() {
+    $scope.refreshCategories = function () {
         var promises = [];
 
         promises.push($mmCourses.invalidateUserCourses());
@@ -74,10 +74,11 @@ angular.module('mm.core.courses')
         promises.push($mmCourses.invalidateCoursesByField('category', categoryId));
         promises.push($mmSite.invalidateConfig());
 
-        $q.all(promises).finally(function() {
-            fetchCategories(true).finally(function() {
+        $q.all(promises).finally(function () {
+            fetchCategories(true).finally(function () {
                 $scope.$broadcast('scroll.refreshComplete');
             });
         });
     };
 });
+//# sourceMappingURL=coursecategories.js.map

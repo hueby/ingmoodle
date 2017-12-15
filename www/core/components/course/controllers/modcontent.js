@@ -23,7 +23,7 @@ angular.module('mm.core.course')
  * @ngdoc controller
  * @name mmCourseModContentCtrl
  */
-.controller('mmCourseModContentCtrl', function($log, $stateParams, $scope, $mmCourseDelegate, $mmCourse, $translate, $mmText) {
+.controller('mmCourseModContentCtrl', function ($log, $stateParams, $scope, $mmCourseDelegate, $mmCourse, $translate, $mmText) {
     $log = $log.getInstance('mmCourseModContentCtrl');
     var module = $stateParams.module || {};
 
@@ -36,7 +36,8 @@ angular.module('mm.core.course')
     $scope.url = module.url;
 
     // Context Menu Description action.
-    $scope.expandDescription = function() {
+    $scope.expandDescription = function () {
         $mmText.expandText($translate.instant('mm.core.description'), $scope.description, false);
     };
 });
+//# sourceMappingURL=modcontent.js.map

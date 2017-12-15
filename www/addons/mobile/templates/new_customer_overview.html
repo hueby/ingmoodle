@@ -1,0 +1,12 @@
+<ion-view>
+    <ion-nav-title>Neuer Kunde</ion-nav-title>
+    <mm-nav-buttons side="secondary">
+        <button class="button button-icon ion-compose" ng-click="createCustomer()">
+        </button>
+    </mm-nav-buttons>
+    <ion-content>
+        <ion-list ng-repeat="customer in customers">
+            <div class="item item-button-right" ng-click="newCustomerClicked(customer.id)">{{customer.lastname}}, {{customer.firstname}}</div>
+        </ion-list>
+    </ion-content>
+</ion-view>

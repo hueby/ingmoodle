@@ -44,14 +44,15 @@ angular.module('mm.core.course')
  *
  * <mm-course-mod-description description="myAsyncDesc" watch="true"></mm-course-mod-description>
  */
-.directive('mmCourseModDescription', function() {
+.directive('mmCourseModDescription', function () {
     return {
-        compile: function(element, attrs) {
+        compile: function (element, attrs) {
             if (attrs.watch) {
                 element.find('mm-format-text').attr('watch', attrs.watch);
             }
 
-            return function(scope) { // Link function.
+            return function (scope) {
+                // Link function.
                 scope.showfull = !!attrs.showfull;
             };
         },
@@ -65,3 +66,4 @@ angular.module('mm.core.course')
         templateUrl: 'core/components/course/templates/mod_description.html'
     };
 });
+//# sourceMappingURL=mod_description.js.map

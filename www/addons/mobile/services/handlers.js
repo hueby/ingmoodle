@@ -12,28 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-angular.module('mm.addons.mobile')
-
-.factory('$mmaMobileHandlers', function($log, $mmaChecklists, $mmSite) {
-    $log = $log.getInstance('$mmaMobileHandlers');
-
+angular.module('mm.addons.mobile').factory('$mmaMobileHandlers', function ($mmSite) {
     var self = {};
 
     self.sideNav = function () {
         var self = {};
         self.isEnabled = function () {
-            return $mmSite.wsAvailable('local_mobile_get_energy_consultant');
+          return self.isEC();
+        };
+
+        self.isEC = function() {
+          return $mmSite.read('local_mobile_get_energy_consultant', { userid: $mmSite.getUserId() }, { getFromCache: 0, saveToCache: 0 })
+            .then(function(res) {
+              if(res) return $mmSite.wsAvailable('local_mobile_get_energy_consultant');
+              else return false;
+            }).catch(function() {
+              return false;
+            });
         };
 
         self.getController = function () {
-            return function ($scope) {
-                $scope.icon  = 'ion-briefcase';
+          return function ($scope) {
+                $scope.icon = 'ion-briefcase';
                 $scope.title = 'Energieberater';
                 $scope.state = 'site.mobile';
                 $scope.class = 'mma-mobile-handler';
-            }
-        }
-        return self;
-    }
+            };
+        };
+      return self;
+    };
     return self;
 });
+//# sourceMappingURL=handlers.js.map
+//
+//
+// 
+//     .then(function(res) {
+
+//       if(res.length != 0) {
+//       }
+//     });

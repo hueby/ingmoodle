@@ -21,7 +21,7 @@ angular.module('mm.core.courses')
  * @ngdoc service
  * @name $mmCourses
  */
-.factory('$mmCourses', function($q, $mmSite, $log, $mmSitesManager, mmCoursesSearchPerPage, mmCoursesEnrolInvalidKey) {
+.factory('$mmCourses', function ($q, $mmSite, $log, $mmSitesManager, mmCoursesSearchPerPage, mmCoursesEnrolInvalidKey) {
 
     $log = $log.getInstance('$mmCourses');
 
@@ -39,20 +39,18 @@ angular.module('mm.core.courses')
      * @param   {String}  [siteId]          Site to get the courses from. If not defined, use current site.
      * @return  {Promise}                   Promise to be resolved when the categories are retrieved.
      */
-    self.getCategories = function(categoryId, addSubcategories, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.getCategories = function (categoryId, addSubcategories, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             // Get parent when id is the root category.
             var criteriaKey = categoryId == 0 ? 'parent' : 'id';
 
             var data = {
-                    criteria: [
-                        { key: criteriaKey, value: categoryId }
-                    ],
-                    addsubcategories: addSubcategories ? 1 : 0
-                },
+                criteria: [{ key: criteriaKey, value: categoryId }],
+                addsubcategories: addSubcategories ? 1 : 0
+            },
                 preSets = {
-                    cacheKey: getCategoriesCacheKey(categoryId, addSubcategories)
-                };
+                cacheKey: getCategoriesCacheKey(categoryId, addSubcategories)
+            };
 
             return site.read('core_course_get_categories', data, preSets);
         });
@@ -70,56 +68,6 @@ angular.module('mm.core.courses')
     }
 
     /**
-     * Given a list of course IDs to get course options, return the list of courseIds to use.
-     *
-     * @param  {Number[]} courseIds Course IDs.
-     * @param  {String} [siteId]    Site Id. If not defined, use current site.
-     * @return {Promise}            Promise resolved with the list of course IDs.
-     */
-    function getCourseIdsForOptions(courseIds, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
-            var siteHomeId = site.getSiteHomeId();
-
-            if (courseIds.length == 1) {
-                // Only 1 course, check if it belongs to the user courses. If so, use all user courses.
-                return self.getUserCourses(true, siteId).then(function(courses) {
-                    var courseId = courseIds[0],
-                        useAllCourses = false;
-
-                    if (courseId == siteHomeId) {
-                        // It's site home, use all courses.
-                        useAllCourses = true;
-                    } else {
-                        for (var i = 0; i < courses.length; i++) {
-                            if (courses[i].id == courseId) {
-                                useAllCourses = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (useAllCourses) {
-                        // User is enrolled, retrieve all the courses.
-                        courseIds = courses.map(function(course) {
-                            return course.id;
-                        });
-
-                        // Always add the site home ID.
-                        courseIds.push(siteHomeId);
-                    }
-
-                    return courseIds;
-                }).catch(function() {
-                    // Ignore errors.
-                    return courseIds;
-                });
-            } else {
-                return courseIds;
-            }
-        });
-    }
-
-    /**
      * Check if get cateogries WS is available.
      *
      * @module mm.core.courses
@@ -127,7 +75,7 @@ angular.module('mm.core.courses')
      * @name $mmCourses#isGetCategoriesAvailable
      * @return {Boolean} True if get categories is available, false otherwise.
      */
-    self.isGetCategoriesAvailable = function() {
+    self.isGetCategoriesAvailable = function () {
         return $mmSite.wsAvailable('core_course_get_categories');
     };
 
@@ -140,8 +88,8 @@ angular.module('mm.core.courses')
      * @param  {String} [siteId] Site Id. If not defined, use current site.
      * @return {Promise}         Promise resolved with true if disabled, rejected or resolved with false otherwise.
      */
-    self.isMyCoursesDisabled = function(siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.isMyCoursesDisabled = function (siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return self.isMyCoursesDisabledInSite(site);
         });
     };
@@ -155,7 +103,7 @@ angular.module('mm.core.courses')
      * @param  {Object} [site] Site. If not defined, use current site.
      * @return {Boolean}       True if disabled, false otherwise.
      */
-    self.isMyCoursesDisabledInSite = function(site) {
+    self.isMyCoursesDisabledInSite = function (site) {
         site = site || $mmSite;
         return site.isFeatureDisabled('$mmSideMenuDelegate_mmCourses');
     };
@@ -169,8 +117,8 @@ angular.module('mm.core.courses')
      * @param  {String} [siteId] Site Id. If not defined, use current site.
      * @return {Promise}         Promise resolved with true if disabled, rejected or resolved with false otherwise.
      */
-    self.isSearchCoursesDisabled = function(siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.isSearchCoursesDisabled = function (siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return self.isSearchCoursesDisabledInSite(site);
         });
     };
@@ -184,7 +132,7 @@ angular.module('mm.core.courses')
      * @param  {Object} [site] Site. If not defined, use current site.
      * @return {Boolean}       True if disabled, false otherwise.
      */
-    self.isSearchCoursesDisabledInSite = function(site) {
+    self.isSearchCoursesDisabledInSite = function (site) {
         site = site || $mmSite;
         return site.isFeatureDisabled('$mmCoursesDelegate_search');
     };
@@ -196,7 +144,7 @@ angular.module('mm.core.courses')
      * @deprecated since version 2.5
      * @protected
      */
-    self.clearCurrentCourses = function() {
+    self.clearCurrentCourses = function () {
         currentCourses = {};
     };
 
@@ -210,8 +158,8 @@ angular.module('mm.core.courses')
      * @param {String} [siteid] Site to get the courses from. If not defined, use current site.
      * @return {Promise}        Promise to be resolved when the courses are retrieved.
      */
-    self.getCourse = function(id, siteid) {
-        return self.getCourses([id], siteid).then(function(courses) {
+    self.getCourse = function (id, siteid) {
+        return self.getCourses([id], siteid).then(function (courses) {
             if (courses && courses.length > 0) {
                 return courses[0];
             }
@@ -228,13 +176,13 @@ angular.module('mm.core.courses')
      * @param {Number} id ID of the course.
      * @return {Promise}  Promise to be resolved when the methods are retrieved.
      */
-    self.getCourseEnrolmentMethods = function(id) {
+    self.getCourseEnrolmentMethods = function (id) {
         var params = {
-                courseid: id
-            },
+            courseid: id
+        },
             preSets = {
-                cacheKey: getCourseEnrolmentMethodsCacheKey(id)
-            };
+            cacheKey: getCourseEnrolmentMethodsCacheKey(id)
+        };
 
         return $mmSite.read('core_enrol_get_course_enrolment_methods', params, preSets);
     };
@@ -258,15 +206,15 @@ angular.module('mm.core.courses')
      * @param {Number} instanceId Guest instance ID.
      * @return {Promise}          Promise to be resolved when the info is retrieved.
      */
-    self.getCourseGuestEnrolmentInfo = function(instanceId) {
+    self.getCourseGuestEnrolmentInfo = function (instanceId) {
         var params = {
-                instanceid: instanceId
-            },
+            instanceid: instanceId
+        },
             preSets = {
-                cacheKey: getCourseGuestEnrolmentInfoCacheKey(instanceId)
-            };
+            cacheKey: getCourseGuestEnrolmentInfoCacheKey(instanceId)
+        };
 
-        return $mmSite.read('enrol_guest_get_instance_info', params, preSets).then(function(response) {
+        return $mmSite.read('enrol_guest_get_instance_info', params, preSets).then(function (response) {
             return response.instanceinfo;
         });
     };
@@ -293,25 +241,25 @@ angular.module('mm.core.courses')
      * @param {String} [siteid] Site to get the courses from. If not defined, use current site.
      * @return {Promise}        Promise to be resolved when the courses are retrieved.
      */
-    self.getCourses = function(ids, siteid) {
+    self.getCourses = function (ids, siteid) {
         if (!angular.isArray(ids)) {
             return $q.reject();
         } else if (ids.length === 0) {
             return $q.when([]);
         }
 
-        return $mmSitesManager.getSite(siteid).then(function(site) {
+        return $mmSitesManager.getSite(siteid).then(function (site) {
 
             var data = {
-                    options: {
-                        ids: ids
-                    }
-                },
+                options: {
+                    ids: ids
+                }
+            },
                 preSets = {
-                    cacheKey: getCoursesCacheKey(ids)
-                };
+                cacheKey: getCoursesCacheKey(ids)
+            };
 
-            return site.read('core_course_get_courses', data, preSets).then(function(courses) {
+            return site.read('core_course_get_courses', data, preSets).then(function (courses) {
                 if (typeof courses != 'object' && !angular.isArray(courses)) {
                     return $q.reject();
                 }
@@ -346,20 +294,20 @@ angular.module('mm.core.courses')
      * @param {String}  [siteId]    Site to get the courses from. If not defined, use current site.
      * @return {Promise}        Promise to be resolved when the courses are retrieved.
      */
-    self.getCoursesByField = function(field, value, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.getCoursesByField = function (field, value, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             var data = {
-                    field: field || "",
-                    value: field ? value : ""
-                },
+                field: field || "",
+                value: field ? value : ""
+            },
                 preSets = {
-                    cacheKey: getCoursesByFieldCacheKey(field, value)
-                };
+                cacheKey: getCoursesByFieldCacheKey(field, value)
+            };
 
-            return site.read('core_course_get_courses_by_field', data, preSets).then(function(courses) {
+            return site.read('core_course_get_courses_by_field', data, preSets).then(function (courses) {
                 if (courses.courses) {
                     // Courses will be sorted using sortorder if avalaible.
-                    return courses.courses.sort(function(a, b) {
+                    return courses.courses.sort(function (a, b) {
                         if (typeof a.sortorder == "undefined" && typeof b.sortorder == "undefined") {
                             return b.id - a.id;
                         }
@@ -401,7 +349,7 @@ angular.module('mm.core.courses')
      * @name $mmCourses#isGetCoursesByFieldAvailable
      * @return {Boolean} True if get courses by field is available, false otherwise.
      */
-    self.isGetCoursesByFieldAvailable = function() {
+    self.isGetCoursesByFieldAvailable = function () {
         return $mmSite.wsAvailable('core_course_get_courses_by_field');
     };
 
@@ -416,11 +364,10 @@ angular.module('mm.core.courses')
      * @return {Object}    Course.
      * @deprecated since version 2.5
      */
-    self.getStoredCourse = function(id) {
+    self.getStoredCourse = function (id) {
         $log.warn('The function \'getStoredCourse\' is deprecated. Please use \'getUserCourse\' instead');
         return currentCourses[id];
     };
-
 
     /**
      * Get the navigation and administration options for the given courses.
@@ -432,31 +379,34 @@ angular.module('mm.core.courses')
      * @param  {String} [siteId]    Site ID. If not defined, current site.
      * @return {Promise}            Promise resolved with the options for each course.
      */
-    self.getCoursesOptions = function(courseIds, siteId) {
+    self.getCoursesOptions = function (courseIds, siteId) {
         var promises = [],
             navOptions,
             admOptions;
 
-        // Get the list of courseIds to use based on the param.
-        return getCourseIdsForOptions(courseIds, siteId).then(function(courseIds) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
+            // Add always the site id course.
+            courseIds.push(site.getSiteHomeId());
 
-            // Get user navigation and administration options.
-            promises.push(self.getUserNavigationOptions(courseIds, siteId).catch(function() {
+            siteId = siteId || site.getId();
+
+            // Get user navigation and administration options to speed up handlers loading.
+            promises.push(self.getUserNavigationOptions(courseIds, siteId).catch(function () {
                 // Couldn't get it, return empty options.
                 return {};
-            }).then(function(options) {
+            }).then(function (options) {
                 navOptions = options;
             }));
 
-            promises.push(self.getUserAdministrationOptions(courseIds, siteId).catch(function() {
+            promises.push(self.getUserAdministrationOptions(courseIds, siteId).catch(function () {
                 // Couldn't get it, return empty options.
                 return {};
-            }).then(function(options) {
+            }).then(function (options) {
                 admOptions = options;
             }));
 
-            return $q.all(promises).then(function() {
-                return {navOptions: navOptions, admOptions: admOptions};
+            return $q.all(promises).then(function () {
+                return { navOptions: navOptions, admOptions: admOptions };
             });
         });
     };
@@ -489,16 +439,16 @@ angular.module('mm.core.courses')
      * @param  {String} [siteId]    Site ID. If not defined, current site.
      * @return {Promise}            Promise resolved with administration options for each course.
      */
-    self.getUserAdministrationOptions = function(courseIds, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.getUserAdministrationOptions = function (courseIds, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             var params = {
-                    courseids: courseIds
-                },
+                courseids: courseIds
+            },
                 preSets = {
-                    cacheKey: getUserAdministrationOptionsCacheKey(courseIds)
-                };
+                cacheKey: getUserAdministrationOptionsCacheKey(courseIds)
+            };
 
-            return site.read('core_course_get_user_administration_options', params, preSets).then(function(response) {
+            return site.read('core_course_get_user_administration_options', params, preSets).then(function (response) {
                 // Format returned data.
                 return formatUserOptions(response.courses);
             });
@@ -518,7 +468,7 @@ angular.module('mm.core.courses')
      * @return {Promise}                    Promise resolved with the course.
      * @since 2.5
      */
-    self.getUserCourse = function(id, preferCache, siteid) {
+    self.getUserCourse = function (id, preferCache, siteid) {
         if (!id) {
             return $q.reject();
         }
@@ -527,9 +477,9 @@ angular.module('mm.core.courses')
             preferCache = false;
         }
 
-        return self.getUserCourses(preferCache, siteid).then(function(courses) {
+        return self.getUserCourses(preferCache, siteid).then(function (courses) {
             var course;
-            angular.forEach(courses, function(c) {
+            angular.forEach(courses, function (c) {
                 if (c.id == id) {
                     course = c;
                 }
@@ -548,25 +498,25 @@ angular.module('mm.core.courses')
      * @param {String} [siteid]            Site to get the courses from. If not defined, use current site.
      * @return {Promise}                   Promise to be resolved when the courses are retrieved.
      */
-    self.getUserCourses = function(preferCache, siteid) {
+    self.getUserCourses = function (preferCache, siteid) {
         if (typeof preferCache == 'undefined') {
             preferCache = false;
         }
 
-        return $mmSitesManager.getSite(siteid).then(function(site) {
+        return $mmSitesManager.getSite(siteid).then(function (site) {
 
             var userid = site.getUserId(),
                 presets = {
-                    cacheKey: getUserCoursesCacheKey(),
-                    omitExpires: preferCache
-                },
-                data = {userid: userid};
+                cacheKey: getUserCoursesCacheKey(),
+                omitExpires: preferCache
+            },
+                data = { userid: userid };
 
             if (typeof userid === 'undefined') {
                 return $q.reject();
             }
 
-            return site.read('core_enrol_get_users_courses', data, presets).then(function(courses) {
+            return site.read('core_enrol_get_users_courses', data, presets).then(function (courses) {
                 siteid = siteid || site.getId();
                 if (siteid === $mmSite.getId()) {
                     // Only store courses if we're getting current site courses. This function is deprecated and will be removed.
@@ -614,16 +564,16 @@ angular.module('mm.core.courses')
      * @param  {String} [siteId]    Site ID. If not defined, current site.
      * @return {Promise}            Promise resolved with navigation options for each course.
      */
-    self.getUserNavigationOptions = function(courseIds, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.getUserNavigationOptions = function (courseIds, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             var params = {
-                    courseids: courseIds
-                },
+                courseids: courseIds
+            },
                 preSets = {
-                    cacheKey: getUserNavigationOptionsCacheKey(courseIds)
-                };
+                cacheKey: getUserNavigationOptionsCacheKey(courseIds)
+            };
 
-            return site.read('core_course_get_user_navigation_options', params, preSets).then(function(response) {
+            return site.read('core_course_get_user_navigation_options', params, preSets).then(function (response) {
                 // Format returned data.
                 return formatUserOptions(response.courses);
             });
@@ -639,10 +589,10 @@ angular.module('mm.core.courses')
     function formatUserOptions(courses) {
         var result = {};
 
-        angular.forEach(courses, function(course) {
+        angular.forEach(courses, function (course) {
             var options = {};
 
-            angular.forEach(course.options, function(option) {
+            angular.forEach(course.options, function (option) {
                 options[option.name] = option.available;
             });
 
@@ -663,8 +613,8 @@ angular.module('mm.core.courses')
      * @param  {String}  [siteId]            Site Id. If not defined, use current site.
      * @return {Promise}                     Promise resolved when the data is invalidated.
      */
-    self.invalidateCategories = function(categoryId, addSubcategories, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateCategories = function (categoryId, addSubcategories, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getCategoriesCacheKey(categoryId, addSubcategories));
         });
     };
@@ -679,7 +629,7 @@ angular.module('mm.core.courses')
      * @param  {String}   [siteId]    Site Id. If not defined, use current site.
      * @return {Promise}   Promise resolved when the data is invalidated.
      */
-    self.invalidateCourse = function(id, siteId) {
+    self.invalidateCourse = function (id, siteId) {
         return self.invalidateCourses([id], siteId);
     };
 
@@ -692,7 +642,7 @@ angular.module('mm.core.courses')
      * @param {Number} id Course ID.
      * @return {Promise}  Promise resolved when the data is invalidated.
      */
-    self.invalidateCourseEnrolmentMethods = function(id) {
+    self.invalidateCourseEnrolmentMethods = function (id) {
         return $mmSite.invalidateWsCacheForKey(getCourseEnrolmentMethodsCacheKey(id));
     };
 
@@ -705,7 +655,7 @@ angular.module('mm.core.courses')
      * @param {Number} instanceId Guest instance ID.
      * @return {Promise}          Promise resolved when the data is invalidated.
      */
-    self.invalidateCourseGuestEnrolmentInfo = function(instanceId) {
+    self.invalidateCourseGuestEnrolmentInfo = function (instanceId) {
         return $mmSite.invalidateWsCacheForKey(getCourseGuestEnrolmentInfoCacheKey(instanceId));
     };
 
@@ -740,8 +690,8 @@ angular.module('mm.core.courses')
      * @param  {String}   [siteId]    Site Id. If not defined, use current site.
      * @return {Promise}              Promise resolved when the data is invalidated.
      */
-    self.invalidateCourses = function(ids, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateCourses = function (ids, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getCoursesCacheKey(ids));
         });
     };
@@ -757,8 +707,8 @@ angular.module('mm.core.courses')
      * @param {String}  [siteId]    Site Id. If not defined, use current site.
      * @return {Promise}   Promise resolved when the data is invalidated.
      */
-    self.invalidateCoursesByField = function(field, value, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateCoursesByField = function (field, value, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getCoursesByFieldCacheKey(field, value));
         });
     };
@@ -772,8 +722,8 @@ angular.module('mm.core.courses')
      * @param {String} [siteId] Site ID to invalidate. If not defined, use current site.
      * @return {Promise}        Promise resolved when the data is invalidated.
      */
-    self.invalidateUserAdministrationOptions = function(siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateUserAdministrationOptions = function (siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKeyStartingWith(getUserAdministrationOptionsCommonCacheKey());
         });
     };
@@ -788,8 +738,8 @@ angular.module('mm.core.courses')
      * @param {String} [siteId]     Site ID to invalidate. If not defined, use current site.
      * @return {Promise}            Promise resolved when the data is invalidated.
      */
-    self.invalidateUserAdministrationOptionsForCourses = function(courseIds, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateUserAdministrationOptionsForCourses = function (courseIds, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getUserAdministrationOptionsCacheKey(courseIds));
         });
     };
@@ -803,8 +753,8 @@ angular.module('mm.core.courses')
      * @param {String} [siteid] Site ID to invalidate. If not defined, use current site.
      * @return {Promise}        Promise resolved when the data is invalidated.
      */
-    self.invalidateUserCourses = function(siteid) {
-        return $mmSitesManager.getSite(siteid).then(function(site) {
+    self.invalidateUserCourses = function (siteid) {
+        return $mmSitesManager.getSite(siteid).then(function (site) {
             return site.invalidateWsCacheForKey(getUserCoursesCacheKey());
         });
     };
@@ -818,8 +768,8 @@ angular.module('mm.core.courses')
      * @param {String} [siteId] Site ID to invalidate. If not defined, use current site.
      * @return {Promise}        Promise resolved when the data is invalidated.
      */
-    self.invalidateUserNavigationOptions = function(siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateUserNavigationOptions = function (siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKeyStartingWith(getUserNavigationOptionsCommonCacheKey());
         });
     };
@@ -834,8 +784,8 @@ angular.module('mm.core.courses')
      * @param {String} [siteId]     Site ID to invalidate. If not defined, use current site.
      * @return {Promise}            Promise resolved when the data is invalidated.
      */
-    self.invalidateUserNavigationOptionsForCourses = function(courseIds, siteId) {
-        return $mmSitesManager.getSite(siteId).then(function(site) {
+    self.invalidateUserNavigationOptionsForCourses = function (courseIds, siteId) {
+        return $mmSitesManager.getSite(siteId).then(function (site) {
             return site.invalidateWsCacheForKey(getUserNavigationOptionsCacheKey(courseIds));
         });
     };
@@ -848,7 +798,7 @@ angular.module('mm.core.courses')
      * @name $mmCourses#isGuestWSAvailable
      * @return {Boolean} True if guest WS is available, false otherwise.
      */
-    self.isGuestWSAvailable = function() {
+    self.isGuestWSAvailable = function () {
         return $mmSite.wsAvailable('enrol_guest_get_instance_info');
     };
 
@@ -860,7 +810,7 @@ angular.module('mm.core.courses')
      * @name $mmCourses#isSearchCoursesAvailable
      * @return {Boolean} True if is available, false otherwise.
      */
-    self.isSearchCoursesAvailable = function() {
+    self.isSearchCoursesAvailable = function () {
         return $mmSite.wsAvailable('core_course_search_courses');
     };
 
@@ -872,7 +822,7 @@ angular.module('mm.core.courses')
      * @name $mmCourses#isSelfEnrolmentEnabled
      * @return {Boolean} True if self enrolment is available, false otherwise.
      */
-    self.isSelfEnrolmentEnabled = function() {
+    self.isSelfEnrolmentEnabled = function () {
         return $mmSite.wsAvailable('enrol_self_enrol_user');
     };
 
@@ -887,22 +837,23 @@ angular.module('mm.core.courses')
      * @param {Number} [perpage] Number of courses per page. Defaults to mmCoursesSearchPerPage.
      * @return {Promise}         Promise resolved with the courses and the total of matches.
      */
-    self.search = function(text, page, perpage) {
+    self.search = function (text, page, perpage) {
         page = page || 0;
         perpage = perpage || mmCoursesSearchPerPage;
 
         var params = {
-                criterianame: 'search',
-                criteriavalue: text,
-                page: page,
-                perpage: perpage
-            }, preSets = {
-                getFromCache: false
-            };
+            criterianame: 'search',
+            criteriavalue: text,
+            page: page,
+            perpage: perpage
+        },
+            preSets = {
+            getFromCache: false
+        };
 
-        return $mmSite.read('core_course_search_courses', params, preSets).then(function(response) {
+        return $mmSite.read('core_course_search_courses', params, preSets).then(function (response) {
             if (typeof response == 'object') {
-                return {total: response.total, courses: response.courses};
+                return { total: response.total, courses: response.courses };
             }
             return $q.reject();
         });
@@ -920,7 +871,7 @@ angular.module('mm.core.courses')
      * @return {Promise}            Promise resolved if the user is enrolled. If the password is invalid,
      *                              the promise is rejected with an object with code = mmCoursesEnrolInvalidKey.
      */
-    self.selfEnrol = function(courseid, password, instanceId) {
+    self.selfEnrol = function (courseid, password, instanceId) {
         if (typeof password == 'undefined') {
             password = '';
         }
@@ -933,21 +884,21 @@ angular.module('mm.core.courses')
             params.instanceid = instanceId;
         }
 
-        return $mmSite.write('enrol_self_enrol_user', params).then(function(response) {
+        return $mmSite.write('enrol_self_enrol_user', params).then(function (response) {
             if (response) {
                 if (response.status) {
                     return true;
                 } else if (response.warnings && response.warnings.length) {
                     var message;
-                    angular.forEach(response.warnings, function(warning) {
-                        // Invalid password warnings.
-                        if (warning.warningcode == '2' || warning.warningcode == '3' || warning.warningcode == '4') {
+                    angular.forEach(response.warnings, function (warning) {
+                        if (warning.warningcode == '2' || warning.warningcode == '4') {
+                            // Invalid password warnings.
                             message = warning.message;
                         }
                     });
 
                     if (message) {
-                        return $q.reject({code: mmCoursesEnrolInvalidKey, message: message});
+                        return $q.reject({ code: mmCoursesEnrolInvalidKey, message: message });
                     }
                 }
             }
@@ -964,10 +915,11 @@ angular.module('mm.core.courses')
      * @deprecated since version 2.5
      */
     function storeCoursesInMemory(courses) {
-        angular.forEach(courses, function(course) {
+        angular.forEach(courses, function (course) {
             currentCourses[course.id] = angular.copy(course); // Store a copy to prevent unwanted modifications.
         });
     }
 
     return self;
 });
+//# sourceMappingURL=courses.js.map

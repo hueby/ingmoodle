@@ -21,9 +21,7 @@ angular.module('mm.core.course')
  * @ngdoc controller
  * @name mmCourseSectionsCtrl
  */
-.controller('mmCourseSectionsCtrl', function($mmCourse, $mmUtil, $scope, $stateParams, $translate, $mmCourseHelper, $mmEvents,
-            $mmSite, $mmCoursePrefetchDelegate, $mmCourses, $q, $ionicHistory, $ionicPlatform, mmCoreCourseAllSectionsId,
-            mmCoreEventSectionStatusChanged, $state, $timeout, $mmCoursesDelegate, $controller) {
+.controller('mmCourseSectionsCtrl', function ($mmCourse, $mmUtil, $scope, $stateParams, $translate, $mmCourseHelper, $mmEvents, $mmSite, $mmCoursePrefetchDelegate, $mmCourses, $q, $ionicHistory, $ionicPlatform, mmCoreCourseAllSectionsId, mmCoreEventSectionStatusChanged, $state, $timeout, $mmCoursesDelegate, $controller, $log) {;
     var courseId = $stateParams.courseid,
         sectionId = parseInt($stateParams.sid, 10),
         sectionNumber = parseInt($stateParams.sectionnumber, 10),
@@ -45,39 +43,39 @@ angular.module('mm.core.course')
             promise = $q.when();
         } else {
             // We don't have the course name, get it.
-            promise = $mmCourses.getUserCourse(courseId).catch(function() {
+            promise = $mmCourses.getUserCourse(courseId).catch(function () {
                 // Fail, maybe user isn't enrolled but he has capabilities to view it.
                 return $mmCourses.getCourse(courseId);
-            }).then(function(courseResponse) {
+            }).then(function (courseResponse) {
                 course = courseResponse;
                 return course.fullname;
-            }).catch(function() {
+            }).catch(function () {
                 // Fail again, return generic value.
                 return $translate.instant('mm.core.course');
             });
         }
 
-        return promise.then(function(courseFullName) {
+        return promise.then(function (courseFullName) {
             if (courseFullName) {
                 $scope.fullname = courseFullName;
             }
 
             // Load course actions in background.
-            $mmCoursesDelegate.getNavHandlersToDisplay(course, refresh, false, true).then(function(buttons) {
-                $scope.courseActions = buttons.map(function(button) {
+            $mmCoursesDelegate.getNavHandlersForCourse(course, refresh, true).then(function (buttons) {
+                $scope.courseActions = buttons.map(function (button) {
                     var newScope = $scope.$new();
-                    $controller(button.controller, {$scope: newScope});
+                    $controller(button.controller, { $scope: newScope });
 
                     var buttonInfo = {
-                            text: $translate.instant(newScope.title),
-                            icon: newScope.icon || false,
-                            priority: button.priority || false,
-                            action: function() {
-                                // Fake event (already prevented) to avoid errors on app.
-                                var ev = document.createEvent("MouseEvent");
-                                return newScope.action(ev, course);
-                            }
-                        };
+                        text: $translate.instant(newScope.title),
+                        icon: newScope.icon || false,
+                        priority: button.priority || false,
+                        action: function () {
+                            // Fake event (already prevented) to avoid errors on app.
+                            var ev = document.createEvent("MouseEvent");
+                            return newScope.action(ev, course);
+                        }
+                    };
 
                     newScope.$destroy();
                     return buttonInfo;
@@ -85,8 +83,8 @@ angular.module('mm.core.course')
             });
 
             // Get the sections.
-            return $mmCourse.getSections(courseId, false, true).then(function(sections) {
-                sections = sections.map(function(section) {
+            return $mmCourse.getSections(courseId, false, true).then(function (sections) {
+                sections = sections.map(function (section) {
                     section.name = section.name.trim() || section.section;
                     return section;
                 });
@@ -97,6 +95,7 @@ angular.module('mm.core.course')
                     id: mmCoreCourseAllSectionsId
                 }].concat(sections);
 
+                $log.debug(JSON.stringify(result));
 
                 $scope.sections = result;
 
@@ -104,12 +103,12 @@ angular.module('mm.core.course')
                     calculateSectionStatus(refresh);
                 }
             });
-        }).catch(function(error) {
+        }).catch(function (error) {
             $mmUtil.showErrorModalDefault(error, 'mm.course.couldnotloadsections', true);
         });
     }
 
-    $scope.toggleDownloadSections = function() {
+    $scope.toggleDownloadSections = function () {
         $scope.downloadSectionsEnabled = !$scope.downloadSectionsEnabled;
         $mmCourseHelper.setDownloadSectionsEnabled($scope.downloadSectionsEnabled);
         $scope.downloadSectionsIcon = getDownloadSectionIcon();
@@ -126,16 +125,16 @@ angular.module('mm.core.course')
     // Calculate status of the sections. We don't return the promise because
     // we don't want to block the rendering of the sections.
     function calculateSectionStatus(refresh) {
-        $mmCourseHelper.calculateSectionsStatus($scope.sections, $scope.courseId, true, refresh).catch(function() {
+        $mmCourseHelper.calculateSectionsStatus($scope.sections, $scope.courseId, true, refresh).catch(function () {
             // Ignore errors (shouldn't happen).
-        }).then(function(downloadpromises) {
+        }).then(function (downloadpromises) {
             // If we restored any download we'll recalculate the status once all of them have finished.
             if (downloadpromises && downloadpromises.length) {
-                $mmUtil.allPromises(downloadpromises).catch(function(error) {
+                $mmUtil.allPromises(downloadpromises).catch(function (error) {
                     if (!$scope.$$destroyed) {
                         $mmUtil.showErrorModalDefault(error, 'mm.course.errordownloadingsection', true);
                     }
-                }).finally(function() {
+                }).finally(function () {
                     if (!$scope.$$destroyed) {
                         // Recalculate the status.
                         $mmCourseHelper.calculateSectionsStatus($scope.sections, $scope.courseId, false);
@@ -148,21 +147,20 @@ angular.module('mm.core.course')
     // Prefetch a section. The second parameter indicates if the prefetch was started manually (true)
     // or it was automatically started because all modules are being downloaded (false).
     function prefetch(section, manual) {
-        $mmCourseHelper.prefetch(section, courseId, $scope.sections).catch(function(error) {
+        $mmCourseHelper.prefetch(section, courseId, $scope.sections).catch(function (error) {
             // Don't show error message if scope is destroyed or it's an automatic download but we aren't in this state.
             if ($scope.$$destroyed) {
                 return;
             }
 
             var current = $ionicHistory.currentStateName(),
-                isCurrent = ($ionicPlatform.isTablet() && current == 'site.mm_course.mm_course-section') ||
-                            (!$ionicPlatform.isTablet() && current == 'site.mm_course');
+                isCurrent = $ionicPlatform.isTablet() && current == 'site.mm_course.mm_course-section' || !$ionicPlatform.isTablet() && current == 'site.mm_course';
             if (!manual && !isCurrent) {
                 return;
             }
 
             $mmUtil.showErrorModalDefault(error, 'mm.course.errordownloadingsection', true);
-        }).finally(function() {
+        }).finally(function () {
             if (!$scope.$$destroyed) {
                 // Recalculate the status.
                 $mmCourseHelper.calculateSectionsStatus($scope.sections, courseId, false);
@@ -177,7 +175,7 @@ angular.module('mm.core.course')
                 // Search the position of the section to load.
                 for (var index in $scope.sections) {
                     var section = $scope.sections[index];
-                    if (section.id == sectionId || (sectionNumber >= 0 && section.section === sectionNumber)) {
+                    if (section.id == sectionId || sectionNumber >= 0 && section.section === sectionNumber) {
                         $scope.sectionToLoad = parseInt(index, 10) + 1;
                         break;
                     }
@@ -186,7 +184,7 @@ angular.module('mm.core.course')
                 // Set moduleId to pass it to the new state when the section is autoloaded. We unset it after this
                 // to prevent autoloading the module when the user manually loads a section.
                 $scope.moduleId = moduleId;
-                $timeout(function() {
+                $timeout(function () {
                     $scope.moduleId = null; // Unset moduleId when
                 }, 500);
             } else {
@@ -195,7 +193,7 @@ angular.module('mm.core.course')
                     for (var index in $scope.sections) {
                         var section = $scope.sections[index];
                         if (section.section == sectionNumber) {
-                            sectionId = section.id
+                            sectionId = section.id;
                             break;
                         }
                     }
@@ -212,7 +210,7 @@ angular.module('mm.core.course')
         }
     }
 
-    $scope.doRefresh = function() {
+    $scope.doRefresh = function () {
         var promises = [];
 
         promises.push($mmCourses.invalidateUserCourses());
@@ -226,44 +224,43 @@ angular.module('mm.core.course')
 
         promises.push($mmCoursesDelegate.clearAndInvalidateCoursesOptions(courseId));
 
-        $q.all(promises).finally(function() {
-            loadSections(true).finally(function() {
+        $q.all(promises).finally(function () {
+            loadSections(true).finally(function () {
                 $scope.$broadcast('scroll.refreshComplete');
             });
         });
     };
 
-    $scope.prefetch = function(e, section) {
+    $scope.prefetch = function (e, section) {
         e.preventDefault();
         e.stopPropagation();
 
         section.isCalculating = true;
-        $mmCourseHelper.confirmDownloadSize(courseId, section, $scope.sections).then(function() {
+        $mmCourseHelper.confirmDownloadSize(courseId, section, $scope.sections).then(function () {
             prefetch(section, true);
-        }).finally(function() {
+        }).finally(function () {
             section.isCalculating = false;
         });
     };
 
-    loadSections().finally(function() {
+    loadSections().finally(function () {
         autoloadSection();
         $scope.sectionsLoaded = true;
     });
 
     // Listen for section status changes.
-    var statusObserver = $mmEvents.on(mmCoreEventSectionStatusChanged, function(data) {
-        if ($scope.downloadSectionsEnabled && $scope.sections && $scope.sections.length && data.siteid === $mmSite.getId() &&
-                    !$scope.$$destroyed && data.sectionid) {
+    var statusObserver = $mmEvents.on(mmCoreEventSectionStatusChanged, function (data) {
+        if ($scope.downloadSectionsEnabled && $scope.sections && $scope.sections.length && data.siteid === $mmSite.getId() && !$scope.$$destroyed && data.sectionid) {
             // Check if the affected section is being downloaded. If so, we don't update section status
             // because it'll already be updated when the download finishes.
-            if ($mmCoursePrefetchDelegate.isBeingDownloaded($mmCourseHelper.getSectionDownloadId({id: data.sectionid}))) {
+            if ($mmCoursePrefetchDelegate.isBeingDownloaded($mmCourseHelper.getSectionDownloadId({ id: data.sectionid }))) {
                 return;
             }
 
             // Recalculate the status.
-            $mmCourseHelper.calculateSectionsStatus($scope.sections, courseId, false).then(function() {
+            $mmCourseHelper.calculateSectionsStatus($scope.sections, courseId, false).then(function () {
                 var section;
-                angular.forEach($scope.sections, function(s) {
+                angular.forEach($scope.sections, function (s) {
                     if (s.id === data.sectionid) {
                         section = s;
                     }
@@ -279,7 +276,8 @@ angular.module('mm.core.course')
         }
     });
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
         statusObserver && statusObserver.off && statusObserver.off();
     });
 });
+//# sourceMappingURL=sections.js.map

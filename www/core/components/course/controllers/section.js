@@ -21,14 +21,15 @@ angular.module('mm.core.course')
  * @ngdoc controller
  * @name mmCourseSectionCtrl
  */
-.controller('mmCourseSectionCtrl', function($mmCourse, $mmUtil, $scope, $stateParams, $translate, $mmEvents, $ionicScrollDelegate,
-            $mmCourses, $q, mmCoreEventCompletionModuleViewed, $mmCoursePrefetchDelegate, $mmCourseHelper, $timeout) {
+.controller('mmCourseSectionCtrl', function ($mmCourse, $mmUtil, $scope, $stateParams, $translate, $mmEvents, $ionicScrollDelegate, $mmCourses, $q, mmCoreEventCompletionModuleViewed, $mmCoursePrefetchDelegate, $mmCourseHelper, $timeout, $log) {
 
     // Default values are Site Home and all sections.
     var courseId = $stateParams.cid,
         sectionId = $stateParams.sectionid || -1,
         moduleId = $stateParams.mid,
         scrollView;
+
+    $log.debug("<<<< " + courseId + " >>>> " + sectionId + " <<<< " + moduleId + " >>>>");
 
     $scope.sections = []; // Reset scope.sections, otherwise an error is shown in console with tablet view.
     $scope.sectionHasContent = $mmCourseHelper.sectionHasContent;
@@ -41,35 +42,34 @@ angular.module('mm.core.course')
 
     // Convenience function to fetch section(s).
     function loadContent(sectionId, refresh) {
-        return $mmCourses.getUserCourse(courseId, true).catch(function() {
+        return $mmCourses.getUserCourse(courseId, true).catch(function () {
             // User not enrolled in the course or an error occurred, ignore the error.
-        }).then(function(course) {
+        }).then(function (course) {
             var promise;
             if (course && course.enablecompletion === false) {
                 promise = $q.when([]); // Completion not enabled, return empty array.
             } else {
-                promise = $mmCourse.getActivitiesCompletionStatus(courseId).catch(function() {
+                promise = $mmCourse.getActivitiesCompletionStatus(courseId).catch(function () {
                     return []; // If fail, return empty array (as if there was no completion).
                 });
             }
 
-            return promise.then(function(completionStatus) {
-                var promise,
-                    sectionnumber;
+            return promise.then(function (completionStatus) {
+                var promise, sectionnumber;
 
                 if (sectionId < 0) {
                     sectionnumber = 0;
                     promise = $mmCourse.getSections(courseId, false, true);
                 } else {
                     sectionnumber = sectionId;
-                    promise = $mmCourse.getSection(courseId, false, true, sectionId).then(function(section) {
+                    promise = $mmCourse.getSection(courseId, false, true, sectionId).then(function (section) {
                         $scope.title = section.name.trim();
                         $scope.summary = section.summary;
                         return [section];
                     });
                 }
 
-                return promise.then(function(sections) {
+                return promise.then(function (sections) {
                     var promise;
                     if (refresh) {
                         // Invalidate the recently downloaded module list. To ensure info can be prefetched.
@@ -79,17 +79,16 @@ angular.module('mm.core.course')
                         promise = $q.when();
                     }
 
-                    return promise.then(function() {
+                    return promise.then(function () {
                         return sections;
                     });
-                }).then(function(sections) {
-                    sections = sections.map(function(section) {
+                }).then(function (sections) {
+                    sections = sections.map(function (section) {
                         section.name = section.name.trim() || false;
                         return section;
                     });
 
-                    $scope.hasContent = $mmCourseHelper.addContentHandlerControllerForSectionModules(sections, courseId,
-                        moduleId, completionStatus, $scope);
+                    $scope.hasContent = $mmCourseHelper.addContentHandlerControllerForSectionModules(sections, courseId, moduleId, completionStatus, $scope);
                     $scope.sections = sections;
 
                     // Add log in Moodle. The 'section' attribute was added in Moodle 3.2 so maybe it isn't available.
@@ -98,18 +97,18 @@ angular.module('mm.core.course')
                     } else {
                         $mmCourse.logView(courseId);
                     }
-                }, function(error) {
+                }, function (error) {
                     $mmUtil.showErrorModalDefault(error, 'mm.course.couldnotloadsectioncontent', true);
                 });
             });
         });
     }
 
-    loadContent(sectionId).finally(function() {
+    loadContent(sectionId).finally(function () {
         $scope.sectionLoaded = true;
 
         if (moduleId) {
-            $timeout(function() {
+            $timeout(function () {
                 // Module should've been opened, scroll to it.
                 if (!scrollView) {
                     scrollView = $ionicScrollDelegate.$getByHandle('mmSectionScroll');
@@ -120,7 +119,7 @@ angular.module('mm.core.course')
         }
     });
 
-    $scope.doRefresh = function() {
+    $scope.doRefresh = function () {
         var promises = [];
 
         promises.push($mmCourse.invalidateSections(courseId));
@@ -129,8 +128,8 @@ angular.module('mm.core.course')
             promises.push($mmCoursePrefetchDelegate.invalidateCourseUpdates(courseId));
         }
 
-        $q.all(promises).finally(function() {
-            loadContent(sectionId, true).finally(function() {
+        $q.all(promises).finally(function () {
+            loadContent(sectionId, true).finally(function () {
                 $scope.$broadcast('scroll.refreshComplete');
             });
         });
@@ -149,31 +148,32 @@ angular.module('mm.core.course')
         $scope.sections = [];
         scrollView.scrollTop(); // Scroll top so the spinner is seen.
 
-        loadContent(sectionId).finally(function() {
+        loadContent(sectionId).finally(function () {
             $scope.sectionLoaded = true;
             // Wait for the view to render and scroll back to the user's position.
-            $timeout(function() {
+            $timeout(function () {
                 scrollView.scrollTo(scrollPosition.left, scrollPosition.top);
             });
         });
     }
 
     // Completion changed for at least one module. Invalidate data and re-load it.
-    $scope.completionChanged = function() {
-        $mmCourse.invalidateSections(courseId).finally(function() {
+    $scope.completionChanged = function () {
+        $mmCourse.invalidateSections(courseId).finally(function () {
             refreshAfterCompletionChange();
         });
     };
 
     // Listen for viewed modules. If an automatic completion module is viewed, refresh the whole list.
-    var observer = $mmEvents.on(mmCoreEventCompletionModuleViewed, function(cid) {
+    var observer = $mmEvents.on(mmCoreEventCompletionModuleViewed, function (cid) {
         if (cid === courseId) {
             refreshAfterCompletionChange();
         }
     });
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
         if (observer && observer.off) {
             observer.off();
         }
     });
 });
+//# sourceMappingURL=section.js.map

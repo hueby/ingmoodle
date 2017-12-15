@@ -16,15 +16,40 @@ describe('User can see New staff induction test as a teacher', function () {
 
     it('User can see New staff induction page', function (done) {
         return MM.loginAsTeacher().then(function () {
-            return MM.clickOnInSideMenu('Course overview');
+            return MM.clickOnInSideMenu('My courses');
+        }).then(function () {
+            expect(MM.getView().getText()).toMatch('New staff induction');
         }).then(function () {
             return MM.clickOn('New staff induction');
         }).then(function () {
             expect(MM.getNavBar().getText()).toMatch('New staff induction');
-            expect(MM.getView().getText()).toContain('All sections');
-            expect(MM.getView().getText()).toContain('Welcome');
-            expect(MM.getView().getText()).toContain('Policies and Procedures');
-            expect(MM.getView().getText()).toContain('IT skills');
+            expect(MM.getView().getText()).toMatch('All sections');
+            expect(MM.getView().getText()).toMatch('Welcome');
+            expect(MM.getView().getText()).toMatch('Policies and Procedures');
+            expect(MM.getView().getText()).toMatch('IT skills');
+        }).then(function () {
+            done();
+        });
+    });
+
+    it('User can click All sections tab', function (done) {
+        return MM.loginAsTeacher().then(function () {
+            return MM.clickOnInSideMenu('My courses');
+        }).then(function () {
+            expect(MM.getView().getText()).toMatch('New staff induction');
+        }).then(function () {
+            return MM.clickOn('New staff induction');
+        }).then(function () {
+            var width = 500;
+            var height = 1800;
+            browser.driver.manage().window().setSize(width, height);
+        }).then(function () {
+            return MM.clickOn('All sections');
+        }).then(function () {
+            expect(MM.getNavBar().getText()).toMatch('All sections');
+            expect(MM.getView().getText()).toMatch('Welcome');
+            expect(MM.getView().getText()).toMatch('Induction FAQ');
+            expect(MM.getView().getText()).toMatch('Policies and Procedures');
         }).then(function () {
             done();
         });
@@ -32,9 +57,15 @@ describe('User can see New staff induction test as a teacher', function () {
 
     it('User can click Welcome tab', function (done) {
         return MM.loginAsTeacher().then(function () {
-            return MM.clickOnInSideMenu('Course overview');
+            return MM.clickOnInSideMenu('My courses');
+        }).then(function () {
+            expect(MM.getView().getText()).toMatch('New staff induction');
         }).then(function () {
             return MM.clickOn('New staff induction');
+        }).then(function () {
+            var width = 500;
+            var height = 1800;
+            browser.driver.manage().window().setSize(width, height);
         }).then(function () {
             return MM.clickOn('Welcome');
         }).then(function () {
@@ -49,9 +80,15 @@ describe('User can see New staff induction test as a teacher', function () {
 
     it('User can click Policies and Procedures tab', function (done) {
         return MM.loginAsTeacher().then(function () {
-            return MM.clickOnInSideMenu('Course overview');
+            return MM.clickOnInSideMenu('My courses');
+        }).then(function () {
+            expect(MM.getView().getText()).toMatch('New staff induction');
         }).then(function () {
             return MM.clickOn('New staff induction');
+        }).then(function () {
+            var width = 500;
+            var height = 1800;
+            browser.driver.manage().window().setSize(width, height);
         }).then(function () {
             return MM.clickOn('Policies and Procedures');
         }).then(function () {
@@ -67,9 +104,15 @@ describe('User can see New staff induction test as a teacher', function () {
 
     it('User can click IT skills tab', function (done) {
         return MM.loginAsTeacher().then(function () {
-            return MM.clickOnInSideMenu('Course overview');
+            return MM.clickOnInSideMenu('My courses');
+        }).then(function () {
+            expect(MM.getView().getText()).toMatch('New staff induction');
         }).then(function () {
             return MM.clickOn('New staff induction');
+        }).then(function () {
+            var width = 500;
+            var height = 1800;
+            browser.driver.manage().window().setSize(width, height);
         }).then(function () {
             return MM.clickOn('IT skills');
         }).then(function () {
@@ -81,5 +124,5 @@ describe('User can see New staff induction test as a teacher', function () {
             done();
         });
     });
-
 });
+//# sourceMappingURL=teacher_new_staff_induction_course.spec.js.map

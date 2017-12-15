@@ -13,47 +13,79 @@
 // limitations under the License.
 
 angular.module('mm.addons.mobile', [])
-
   .constant('mmaMobilePriority', 600)
   .constant('mmaMobileCustomersRefreshed', 'user refreshed')
   .constant('mmaMobileCustomersAdded', 'user added')
-
-  .config(function($stateProvider, $mmSideMenuDelegateProvider, mmaMobilePriority) {
-    $stateProvider
-      .state('site.mobile', {
-        url: '/mobile',
-        views: {
-          site: {
-            templateUrl: 'addons/mobile/templates/login.html',
-            controller: 'mmaMobileLoginCtrl'
-          }
-        }
-      })
-      .state('site.consultant_dashboard', {
-        url: '/consultant_dashboard',
-        params: {
-          consultant: null
-        },
-        views: {
-          site: {
-            templateUrl: 'addons/mobile/templates/dashboard.html',
-            controller: 'mmaMobileConsultantOverviewCtrl'
-          }
-        }
-      })
-      .state('site.mmaConsultant', {
-        url: '/consultant_detail',
-        params: {
-          consultant: null
-        },
-        views: {
-          site: {
-            templateUrl: 'addons/mobile/templates/detail.html',
-            controller: 'mmaMobileConsultantDetailCtrl'
-          }
-        }
-      });
-
-    $mmSideMenuDelegateProvider.registerNavHandler('mmaMobile', '$mmaMobileHandlers.sideNav', mmaMobilePriority);
-
+  .config(function ($stateProvider, $mmSideMenuDelegateProvider, mmaMobilePriority) {
+  $stateProvider.state('site.mobile', {
+    url: '/mobile',
+    views: {
+      site: {
+        templateUrl: 'addons/mobile/templates/login.html',
+        controller: 'mmaMobileLoginCtrl'
+      }
+    }
+  })
+  .state('site.consultant_dashboard', {
+    url: '/consultant_dashboard',
+    params: {
+      consultant: null
+    },
+    views: {
+      site: {
+        templateUrl: 'addons/mobile/templates/dashboard.html',
+        controller: 'mmaMobileConsultantOverviewCtrl'
+      }
+    }
+  })
+  .state('site.mmaConsultant', {
+    url: '/consultant_detail',
+    params: {
+      consultant: null
+    },
+    views: {
+      site: {
+        templateUrl: 'addons/mobile/templates/detail.html',
+        controller: 'mmaMobileConsultantDetailCtrl'
+      }
+    }
+  })
+  .state('site.mmaPackageOverview', {
+    url: '/package_overview',
+    params: {
+      customer: null
+    },
+    views: {
+      site: {
+        templateUrl: 'addons/mobile/templates/packageoverview.html',
+        controller: 'mmaMobilePackageOverview'
+      }
+    }
+  })
+  .state('site.mmaNewCustomerOverview', {
+    url: '/new_customer_overview',
+    params: {
+      customers: null
+    },
+    views: {
+      site: {
+        templateUrl: 'addons/mobile/templates/new_customer_overview.html',
+        controller: 'mmaMobileNewCustomerOverview'
+      }
+    }
+  })
+  .state('site.mmaNewCustomerCreate', {
+    url: '/new_customer_create',
+    views: {
+      site: {
+        templateUrl: 'addons/mobile/templates/new_customer_create.html',
+        controller: 'mmaMobileNewCustomerCreate'
+      }
+    }
   });
+
+
+  $mmSideMenuDelegateProvider.registerNavHandler('mmaMobile', '$mmaMobileHandlers.sideNav', mmaMobilePriority);
+  
+});
+//# sourceMappingURL=main.js.map

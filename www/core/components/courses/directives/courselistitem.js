@@ -30,24 +30,23 @@ angular.module('mm.core.courses')
  *
  * <mm-course-list-item course="course"></mm-course-list-item>
  */
-.directive('mmCourseListItem', function($mmCourses, $translate) {
+.directive('mmCourseListItem', function ($mmCourses, $translate) {
     return {
         restrict: 'E',
         templateUrl: 'core/components/courses/templates/courselistitem.html',
         scope: {
-            course: '=',
+            course: '='
         },
-        link: function(scope) {
+        link: function (scope) {
             var course = scope.course;
 
-            return $mmCourses.getUserCourse(course.id).then(function() {
+            return $mmCourses.getUserCourse(course.id).then(function () {
                 course.isEnrolled = true;
-            }).catch(function() {
+            }).catch(function () {
                 course.isEnrolled = false;
                 course.enrollment = [];
 
-
-                angular.forEach(course.enrollmentmethods, function(instance) {
+                angular.forEach(course.enrollmentmethods, function (instance) {
                     if (instance === 'self') {
                         course.enrollment.push({
                             name: $translate.instant('mm.courses.selfenrolment'),
@@ -76,3 +75,4 @@ angular.module('mm.core.courses')
         }
     };
 });
+//# sourceMappingURL=courselistitem.js.map
