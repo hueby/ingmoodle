@@ -88,35 +88,37 @@
     "directories": {
       "output": "desktop/dist"
     },
-    "protocols": [
-      {
-        "name": "Moodle Mobile URL",
-        "schemes": [
-          "moodlemobile"
-        ],
-        "role": "Viewer"
-      }
-    ],
-    "compression": "maximum",
-    "electronVersion": "1.6.11",
-    "mac": {
-      "category": "public.app-category.education",
-      "icon": "resources/desktop/icon.icns",
-      "target": "mas",
-      "extendInfo": {
-        "ElectronTeamID": "2NU57U5PAW"
-      }
+(??)    "cordova-plugin-splashscreen",
+(??)    "cordova-plugin-statusbar",
+(??)    "cordova-plugin-whitelist",
+(??)    {
+(??)      "locator": "https://github.com/Tunts/WebIntent",
+(??)      "id": "net.tunts.webintent"
     },
-    "win": {
-      "target": "appx",
-      "icon": "resources/desktop/icon.ico"
+(??)    {
+(??)      "variables": {
+(??)        "URL_SCHEME": "moodlemobile"
+(??)      },
+(??)      "locator": "cordova-plugin-customurlscheme",
+(??)      "id": "cordova-plugin-customurlscheme"
     },
-    "linux": {
-      "category": "Education",
-      "target": "snap"
-    },
-    "snap": {
-      "confinement": "classic"
+(??)    "ionic-plugin-keyboard",
+(??)    {
+(??)      "locator": "https://github.com/ti8m/DocumentHandler",
+(??)      "id": "ch.ti8m.documenthandler"
+(??)    },
+(??)    "cordova-plugin-local-notifications-mm",
+(??)    "cordova-plugin-zip",
+(??)    {
+(??)      "variables": {
+(??)        "SENDER_ID": "694767596569"
+(??)      },
+(??)      "locator": "phonegap-plugin-push",
+(??)      "id": "phonegap-plugin-push"
     }
-  }
+(??)  ],
+(??)  "cordovaPlatforms": [
+(??)    "ios",
+(??)    "android"
+(??)  ]
 }

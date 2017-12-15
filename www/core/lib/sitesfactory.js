@@ -503,18 +503,7 @@ angular.module('mm.core')
             preSets = angular.copy(preSets) || {};
             preSets.wstoken = site.token;
             preSets.siteurl = site.siteurl;
-(??)            
-(??)            console.log("PRESETS: " + JSON.stringify(preSets));
-(??)            preSets.cleanUnicode = site.cleanUnicode;
 (??)
-(??)            if (preSets.cleanUnicode && $mmText.hasUnicodeData(data)) {
-(??)                // Data will be cleaned, notify the user.
-(??)                // @todo: Detect if the call is a syncing call and not notify.
-(??)                $mmUtil.showToast('mm.core.unicodenotsupported', true, 3000);
-(??)            } else {
-(??)                // No need to clean data in this call.
-(??)                preSets.cleanUnicode = false;
-(??)            }
 
             // Enable text filtering by default.
             data.moodlewssettingfilter = preSets.filter === false ? false : true;
