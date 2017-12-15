@@ -7,8 +7,8 @@
         <ion-refresher pulling-text="{{ 'mm.core.pulltorefresh' | translate }}" ng-if="coursesLoaded" on-refresh="refreshCourses()">
         </ion-refresher>
         <mm-loading hide-until="coursesLoaded">
-            <div ng-if="courses && courses.length > 5" class="item item-transparent item-input-inset">
-                <ion-input class="item-input-wrapper">
+            <div class="list" ng-if="courses && courses.length > 5">
+                <ion-input class="item item-input">
                     <i class="icon ion-funnel placeholder-icon"></i>
                     <input type="text" placeholder="{{ 'mm.courses.filtermycourses' | translate}}" ng-model="filter.filterText">
                 </ion-input>
@@ -43,7 +43,7 @@
             <div ng-if="!courses || !courses.length">
                 <p>{{ 'mm.courses.nocourses' | translate }}</p>
                 <p ng-if="searchEnabled">{{ 'mm.courses.searchcoursesadvice' | translate }}</p>
-            </mm-empty-box>
+            </div>
         </mm-loading>
     </ion-content>
 </ion-view>
