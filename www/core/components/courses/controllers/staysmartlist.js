@@ -33,17 +33,24 @@ angular.module('mm.core.courses')
         return $mmCourses.getUserCourses().then(function (courses) {
             $scope.filter.filterText = ''; // Filter value MUST be set after courses are shown.
 
-            var courseIds = courses.map(function (course) {
+            var coursess = courses.filter(function(course) {
+                // filter out visible = 0
+                if(course.visible === 0) {
+                    return course;
+                }
+            });
+
+            var courseIds = coursess.map(function (course) {
                 return course.id;
             });
 
             return $mmCourses.getCoursesOptions(courseIds).then(function (options) {
-                angular.forEach(courses, function (course) {
+                angular.forEach(coursess, function (course) {
                     course.progress = isNaN(parseInt(course.progress, 10)) ? false : parseInt(course.progress, 10);
                     course.navOptions = options.navOptions[course.id];
                     course.admOptions = options.admOptions[course.id];
                 });
-                $scope.courses = courses;
+                $scope.courses = coursess;
             });
         }, function (error) {
             $mmUtil.showErrorModalDefault(error, 'mm.courses.errorloadcourses', true);
