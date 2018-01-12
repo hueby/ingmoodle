@@ -30,7 +30,7 @@ angular.module('mm.core.courses')
  *
  * <mm-course-list-progress course="course" round-progress="true" show-summary="true"></mm-course-list-progress>
  */
-.directive('mmCourseListProgressStaysmart', function ($ionicActionSheet, $mmCoursesDelegate, $translate, $controller, $mmEvents, mmCoursesEventCourseOptionsInvalidated) {
+.directive('mmCourseListProgressStaysmart', function ($ionicActionSheet, $mmCoursesDelegate, $translate, $controller, $mmEvents, mmCoursesEventCourseOptionsInvalidated, $log) {
     return {
         restrict: 'E',
         templateUrl: 'core/components/courses/templates/courselistprogressstaysmart.html',
@@ -42,10 +42,10 @@ angular.module('mm.core.courses')
         },
         link: function (scope) {
             var buttons, invObserver;
-            scope.loaded = false;
+            scope.loaded = true;
 
             function updateButtons(refresh) {
-                scope.loaded = false;
+                // scope.loaded = false;
                 $mmCoursesDelegate.getNavHandlersForCourse(scope.course, refresh, true).then(function (buttonsLoaded) {
                     buttons = buttonsLoaded.map(function (button) {
                         var newScope = scope.$new();

@@ -35,7 +35,7 @@ angular.module('mm.core.courses')
 
             var coursess = courses.filter(function(course) {
                 // filter out visible = 0
-                if(course.visible === 0) {
+                if(course.visible === 0 && course.format === "singleactivity") {
                     return course;
                 }
             });

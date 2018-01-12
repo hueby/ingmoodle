@@ -30,22 +30,22 @@ angular.module('mm.core.course', ['mm.core.courses']).constant('mmCoreCoursePrio
             }
         }
     })
-    // .state('site.mm_course_staysmart', {
-    //   url: '/mm_course_staysmart',
-    //     params: {
-    //         courseid: null,
-    //         sid: null, // Section to load. Not naming it sectionid because it collides with 'mm_course-section' param in split-view.
-    //         sectionnumber: null, // Section to load. If sid is provided there is no need to provide sectionnumber and vice versa.
-    //         moduleid: null, // Module to load.
-    //         course: null
-    //     },
-    //     views: {
-    //         'site': {
-    //             templateUrl: 'core/components/course/templates/sections.html',
-    //             controller: 'mmCourseSectionsStaySmartCtrl'
-    //         }
-    //     }
-    // })
+    .state('site.mm_course_staysmart', {
+      url: '/mm_course_staysmart',
+        params: {
+            courseid: null,
+            sid: null, // Section to load. Not naming it sectionid because it collides with 'mm_course-section' param in split-view.
+            sectionnumber: null, // Section to load. If sid is provided there is no need to provide sectionnumber and vice versa.
+            moduleid: null, // Module to load.
+            course: null
+        },
+        views: {
+            'site': {
+                templateUrl: 'core/components/course/templates/staysmartsections.html',
+                controller: 'mmCourseSectionsStaySmartCtrl'
+            }
+        }
+    })
     .state('site.mm_course-section', {
         url: '/mm_course-section',
         params: {
@@ -57,6 +57,19 @@ angular.module('mm.core.course', ['mm.core.courses']).constant('mmCoreCoursePrio
             'site': {
                 templateUrl: 'core/components/course/templates/section.html',
                 controller: 'mmCourseSectionCtrl'
+            }
+        }
+    }).state('site.mm_course-section-staysmart', {
+        url: '/mm_course-section-staysmart',
+        params: {
+            sectionid: null,
+            cid: null, // Not naming it courseid because it collides with 'site.mm_course' param in split-view.
+            mid: null // Not naming it moduleid because it collides with 'site.mm_course' param in split-view.
+        },
+        views: {
+            'site': {
+                templateUrl: 'core/components/course/templates/staysmartsection.html',
+                controller: 'mmCourseSectionStaySmartCtrl'
             }
         }
     }).state('site.mm_course-modcontent', {
