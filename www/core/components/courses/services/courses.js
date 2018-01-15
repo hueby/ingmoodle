@@ -28,6 +28,9 @@ angular.module('mm.core.courses')
     var self = {},
         currentCourses = {};
 
+    self.getModuleId = function(moduleids) {
+        return $mmSite.read('local_mobile_get_module_id', {courses: moduleids }, {getFromCache: 0, saveToCache:0});
+    }
     /**
      * Get categories. They can be filtered by id.
      *

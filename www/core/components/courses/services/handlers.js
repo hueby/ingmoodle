@@ -25,6 +25,7 @@ angular.module('mm.core.courses')
 
     var self = {};
 
+
     /**
      * Content links handler for list of courses.
      * It can show the list of available courses or in a certain category. It will show My Courses in old sites.

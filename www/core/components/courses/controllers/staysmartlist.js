@@ -52,6 +52,7 @@ angular.module('mm.core.courses')
                 });
                 $scope.courses = coursess;
             });
+
         }, function (error) {
             $mmUtil.showErrorModalDefault(error, 'mm.courses.errorloadcourses', true);
         });
