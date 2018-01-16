@@ -17,13 +17,15 @@
             <span class="input-label">E-Mail</span>
             <input ng-model="user.email" type="email" placeholder="" >
           </label>
-          <label class="item item-input">
+          <label class="item item-input" ng-hide="showCreate">
             <span class="input-label">Password</span>
             <input ng-model="user.password" type="password" placeholder="">
           </label>
         </ion-list>
         <div class="spacer" style="height: 40px;"></div>
-        <button  class="button button-stable button-block " ng-click="createCustomer(user)" >Anlegen</button>
+        <button class="button button-stable button-block" ng-hide="showCreate" ng-click="createCustomer(user)" >Anlegen</button>
+        <button class="button button-stable button-block button-assertive" color="danger" ng-hide="showUpdate" ng-click="deleteCustomer(user)" >Kunden löschen</button>
+        <button class="button button-stable button-block" ng-hide="showUpdate" ng-click="updateCustomer(user)" >Ändern</button>
       </form>
     </ion-content>
 </ion-view>

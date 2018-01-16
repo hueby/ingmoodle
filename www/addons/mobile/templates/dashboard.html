@@ -6,7 +6,7 @@
     </mm-nav-buttons>
     <ion-content>
         <ion-list ng-repeat="customer in customers">
-            <div class="item item-button-right" ng-click="customerSelected(customer.id)">{{customer.lastname}}, {{customer.firstname}}</div>
+            <div class="item item-button-right" on-hold="longpress(customer)" ng-click="customerSelected(customer.id)">{{customer.lastname}}, {{customer.firstname}}</div>
         </ion-list>
     </ion-content>
 </ion-view>

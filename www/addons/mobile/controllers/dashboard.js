@@ -46,6 +46,10 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
     });
   };
 
+    $scope.longpress = function(user) {
+        $state.go("site.mmaNewCustomerCreate", {user: user});
+    }
+
   // $mmEvents.on(mmaChecklistsCustomersRefreshed, function () {
   //   $mmaChecklists.getCustomers().then(function (customers) {
   //     $scope.customers = customers;

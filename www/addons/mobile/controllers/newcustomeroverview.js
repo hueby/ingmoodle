@@ -1,6 +1,9 @@
 angular.module('mm.addons.mobile').controller('mmaMobileNewCustomerOverview', function($scope, $ionicHistory, $log, $mmSite, $mmaMobile, $state) {
-  $mmaMobile.getAvailableUsers().then(function(res) {
-    $scope.customers = res;
+
+  $scope.$on("$ionicView.enter", function() {
+      $mmaMobile.getAvailableUsers().then(function(res) {
+          $scope.customers = res;
+      });
   });
 
   $scope.newCustomerClicked = function(customerid) {
@@ -13,6 +16,7 @@ angular.module('mm.addons.mobile').controller('mmaMobileNewCustomerOverview', fu
 
   $scope.createCustomer = function() {
     $state.go('site.mmaNewCustomerCreate');
-
   };
+
+
 });

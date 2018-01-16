@@ -35,5 +35,28 @@ angular.module('mm.addons.mobile').config(function () {}).factory('$mmaMobile', 
     return $mmSite.read('local_mobile_create_customer', {consultant: $mmSite.getUserId(), customer: customerid}, { getFromCache: 0, saveToCache: 0});
   }
 
+    self.createNewMoodleUser = function(user) {
+        return $mmSite.write(
+            'local_mobile_create_moodle_customer', 
+            {firstname: user.firstname, lastname: user.lastname, email: user.email, password: user.password},
+            {getFromCache: 0, saveToCache: 0}
+        );
+    }
+
+    self.updateCustomer = function(user) {
+        return $mmSite.write(
+            'local_mobile_update_moodle_customer', 
+            {id: user.id, firstname: user.firstname, lastname: user.lastname, email: user.email},
+            {getFromCache: 0, saveToCache: 0}
+        );
+    }
+
+    self.deleteCustomer = function(user) {
+        return $mmSite.write(
+            'local_mobile_delete_customer', 
+            {id: user.id},
+            {getFromCache: 0, saveToCache: 0}
+        );
+    }
   return self;
 });

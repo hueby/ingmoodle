@@ -76,6 +76,9 @@ angular.module('mm.addons.mobile', [])
   })
   .state('site.mmaNewCustomerCreate', {
     url: '/new_customer_create',
+    params: {
+        user: null
+    },
     views: {
       site: {
         templateUrl: 'addons/mobile/templates/new_customer_create.html',
