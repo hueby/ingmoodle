@@ -23,9 +23,12 @@ angular.module('mm.core.course')
 .controller('mmCourseSectionStaySmartCtrl', function ($mmCourse, $mmUtil, $scope, $stateParams, $translate, $mmEvents, $ionicScrollDelegate, $mmCourses, $q, mmCoreEventCompletionModuleViewed, $mmCoursePrefetchDelegate, $mmCourseHelper, $timeout, $log) {
 
     // Default values are Site Home and all sections.
-    var courseId = $stateParams.cid,
-        sectionId = $stateParams.sectionid || -1,
-        moduleId = $stateParams.mid,
+    var courseId     = $stateParams.cid,
+        sectionId    = $stateParams.sectionid || -1,
+        moduleId     = $stateParams.mid,
+        cmid         = $stateParamas.cmid;
+        customerId   = $stateParams.customerId,
+        consultantId = $stateParams.consultantId,
         scrollView;
 
 
@@ -172,6 +175,12 @@ angular.module('mm.core.course')
         if (observer && observer.off) {
             observer.off();
         }
+    });
+
+    $scope.$on('$ionicView.enter', function() {
+        // call ws method to swap userid on current module
+        // EC is using current course for current customer
+        $mmCourse.beginWorkprocess(customerId, consultantId, cmid);
     });
 });
 //# sourceMappingURL=section.js.map

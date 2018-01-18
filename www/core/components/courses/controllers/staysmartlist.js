@@ -44,6 +44,11 @@ angular.module('mm.core.courses')
                 return course.id;
             });
 
+            $log.debug(courseIds.join());
+            $mmCourses.getModuleId(courseIds.join()).then(function(result) {
+                
+               $log.debug(result); 
+            });
             return $mmCourses.getCoursesOptions(courseIds).then(function (options) {
                 angular.forEach(coursess, function (course) {
                     course.progress = isNaN(parseInt(course.progress, 10)) ? false : parseInt(course.progress, 10);

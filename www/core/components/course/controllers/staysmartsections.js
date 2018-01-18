@@ -29,8 +29,6 @@ angular.module('mm.core.course')
         moduleId = $stateParams.mid,
         scrollView;
 
-    $log.debug("<<<< " + courseId + " >>>> " + sectionId + " <<<< " + moduleId + " >>>>");
-
     $scope.sections = []; // Reset scope.sections, otherwise an error is shown in console with tablet view.
     $scope.sectionHasContent = $mmCourseHelper.sectionHasContent;
 

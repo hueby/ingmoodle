@@ -637,5 +637,11 @@ angular.module('mm.core.course').constant('mmCoreCourseModulesStore', 'course_mo
     };
 
     return self;
+
+    self.beginWorkprocess = function(customer, consultant, cmid) {
+        return $mmSite.write("local_mobile_begin_workprocess", 
+            { customer: customer, consultant: consultant, cmid: cmid },
+            { getFromCache: 0, saveToCache: 0});
+    }
 });
 //# sourceMappingURL=course.js.map

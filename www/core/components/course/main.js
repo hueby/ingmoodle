@@ -64,7 +64,9 @@ angular.module('mm.core.course', ['mm.core.courses']).constant('mmCoreCoursePrio
         params: {
             sectionid: null,
             cid: null, // Not naming it courseid because it collides with 'site.mm_course' param in split-view.
-            mid: null // Not naming it moduleid because it collides with 'site.mm_course' param in split-view.
+            mid: null, // Not naming it moduleid because it collides with 'site.mm_course' param in split-view.
+            customerid: null,
+            consultantid: null
         },
         views: {
             'site': {
