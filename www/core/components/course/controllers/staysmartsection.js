@@ -26,11 +26,12 @@ angular.module('mm.core.course')
     var courseId     = $stateParams.cid,
         sectionId    = $stateParams.sectionid || -1,
         moduleId     = $stateParams.mid,
-        cmid         = $stateParamas.cmid;
-        customerId   = $stateParams.customerId,
-        consultantId = $stateParams.consultantId,
+        cmid         = $stateParams.cmid || -1,
+        customerId   = $stateParams.customerId || -1,
+        consultantId = $stateParams.consultantId || -1,
         scrollView;
 
+    $log.debug(JSON.stringify($stateParams));
 
     $scope.sections = []; // Reset scope.sections, otherwise an error is shown in console with tablet view.
     $scope.sectionHasContent = $mmCourseHelper.sectionHasContent;

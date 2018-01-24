@@ -44,11 +44,6 @@ angular.module('mm.core.courses')
                 return course.id;
             });
 
-            $log.debug(courseIds.join());
-            $mmCourses.getModuleId(courseIds.join()).then(function(result) {
-                
-               $log.debug(result); 
-            });
             return $mmCourses.getCoursesOptions(courseIds).then(function (options) {
                 angular.forEach(coursess, function (course) {
                     course.progress = isNaN(parseInt(course.progress, 10)) ? false : parseInt(course.progress, 10);
@@ -56,6 +51,21 @@ angular.module('mm.core.courses')
                     course.admOptions = options.admOptions[course.id];
                 });
                 $scope.courses = coursess;
+                $mmCourses.getModuleId(courseIds.join()).then(function(result) {
+                    var courss = [];
+                    $log.debug(JSON.stringify(result));
+                    angular.forEach(result, function(co) {
+                        angular.forEach($scope.courses, function(cou) {
+                            if(cou.id === co.id) {
+                                cou.cmid = co.cmid;
+                                cou.consultant = $mmSite.getUserId();
+                                cou.customer = /* GET DIS FROM VIEW B4 */;
+                                courss.push(cou);
+                            }
+                        });
+                    });
+                    $scope.courses = courss;
+                });
             });
 
         }, function (error) {
