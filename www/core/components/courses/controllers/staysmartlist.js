@@ -21,7 +21,7 @@ angular.module('mm.core.courses')
  * @ngdoc controller
  * @name mmCoursesListCtrl
  */
-.controller('mmCoursesListStaySmartCtrl', function ($scope, $mmCourses, $mmCoursesDelegate, $mmUtil, $mmEvents, $mmSite, $q, mmCoursesEventMyCoursesUpdated, mmCoreEventSiteUpdated, $log) {
+.controller('mmCoursesListStaySmartCtrl', function ($scope, $mmCourses, $stateParams, $mmCoursesDelegate, $mmUtil, $mmEvents, $mmSite, $q, mmCoursesEventMyCoursesUpdated, mmCoreEventSiteUpdated, $log) {
 
     var updateSiteObserver, myCoursesObserver;
 
@@ -59,12 +59,13 @@ angular.module('mm.core.courses')
                             if(cou.id === co.id) {
                                 cou.cmid = co.cmid;
                                 cou.consultant = $mmSite.getUserId();
-                                cou.customer = /* GET DIS FROM VIEW B4 */;
+                                cou.customer = $stateParams.customer;
                                 courss.push(cou);
                             }
                         });
                     });
                     $scope.courses = courss;
+                    $log.debug(JSON.stringify($scope.courses));
                 });
             });
 

@@ -29,6 +29,9 @@ angular.module('mm.core.courses', ['mm.core.contentlinks', 'mm.core.sidemenu']).
         }
     }).state('site.mm_courses_staysmart', {
         url: '/mm_courses_staysmart',
+        params: {
+            customer: null
+        },
         views: {
             'site': {
                 templateUrl: 'core/components/courses/templates/list_staysmart.html',

@@ -2,14 +2,13 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
   $log = $log.getInstance('$mmaMobile');
 
   $mmaMobile.getCustomers($mmSite.getUserId()).then(function (customers) {
-    $log.debug("ASKDJALSD" + JSON.stringify(customers));
     $scope.customers = customers;
   }).catch(function(error) {
     $log.warn("Error: " + error);
   });
 
-  $scope.$on( "$ionicView.beforeEnter", function() {
-    $mmaMobile.clearCustomers($stateParams.consultant.id).then(function () {
+  $scope.$on("$ionicView.beforeEnter", function() {
+    $mmaMobile.closeAllWorkprocesses($stateParams.consultant.id).then(function() {
       $log.debug("All customers set to 0");
       $mmaMobile.getCustomers($mmSite.getUserId()).then(function(cus) {
         $scope.customers = cus;
@@ -40,7 +39,7 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
 
     $mmaMobile.activeCustomer($stateParams.consultant.id, customerId).then(function() {
       // on this point, load an extended version of mm_courses 
-      $state.go("site.mm_courses_staysmart");
+      $state.go("site.mm_courses_staysmart", { customer: customerId });
     }).catch(function(error){
       $log.debug("FÄHL " + error);
     });
@@ -50,10 +49,4 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
         $state.go("site.mmaNewCustomerCreate", {user: user});
     }
 
-  // $mmEvents.on(mmaChecklistsCustomersRefreshed, function () {
-  //   $mmaChecklists.getCustomers().then(function (customers) {
-  //     $scope.customers = customers;
-  //     $scope.$broadcast('scroll.refreshComplete');
-  //   });
-  // });
 });
