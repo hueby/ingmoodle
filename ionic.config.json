@@ -16,7 +16,8 @@
   ],
   "defaultBrowser": "google chrome",
   "integrations": {
-    "gulp": {}
+    "gulp": {},
+    "cordova": {}
   },
   "type": "ionic1"
 }

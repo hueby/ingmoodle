@@ -10,7 +10,9 @@
             </div>
         </div>
         <ion-list ng-repeat="wp in wps">
-            <div class="item item-button-right" ng-click="customerSelected()">{{wp.courseName}} von {{wp.firstname}} {{wp.lastname}} ({{wp.email}})</div>
+            <div class="card">
+                <div class="item item-text-wrap item-button-right" ng-click="customerSelected(wp.course, wp.moduleName, wp.module, wp.reviewInstance)">Arbeitsprozess {{wp.courseName}} von {{wp.firstname}} {{wp.lastname}} ({{wp.email}})</div>
+            </div>
         </ion-list>
     </ion-content>
 </ion-view>

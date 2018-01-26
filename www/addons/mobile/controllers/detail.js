@@ -8,8 +8,20 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantDetailCtrl', f
         $log.error(error); 
     });
 
-    $scope.customerSelected = function() {
-        $state.go("site.mod_quiz-review", { courseid: 10, quizid: 5, attemptid: 4});
+    $scope.customerSelected = function(course, moduleName, module, review) {
+        switch(moduleName) {
+            case "quiz": {
+                var asd = { courseid: course, quizid: module, attemptid: review};
+                $log.debug("ASD " + JSON.stringify(asd));
+                $state.go("site.mod_quiz-review", asd);
+            }
+                break;
+            default: {
+                $log.debug("Modul nicht unterstützt"); 
+            }
+                break;
+
+        }
     }
 
 });

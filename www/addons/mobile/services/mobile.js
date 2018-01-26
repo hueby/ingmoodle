@@ -13,12 +13,6 @@ angular.module('mm.addons.mobile').config(function () {}).factory('$mmaMobile', 
         return $mmSite.read('local_mobile_get_customers', {consultant_id: userid}, { getFromCache: 0, saveToCache: 0});
     };
 
-    self.clearCustomers = function(consultantId) {
-        $log.debug("Zero customers for consultants");
-        $log.debug("Consultant: " + consultantId);
-        return $mmSite.read('local_mobile_zero_customers', { consultant: consultantId }, { getFromCache: 0, saveToCache: 0});
-    };
-
     self.activeCustomer = function(consultant, customer) {
         $log.debug("Set customer active");
         $log.debug("Consultant: " + consultant + " Customer: " + customer);
