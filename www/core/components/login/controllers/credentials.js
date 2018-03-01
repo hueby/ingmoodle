@@ -23,7 +23,7 @@ angular.module('mm.core.login')
  */
 .controller('mmLoginCredentialsCtrl', function($scope, $stateParams, $mmSitesManager, $mmUtil, $ionicHistory, $mmApp, $mmEvents,
             $q, $mmLoginHelper, $mmContentLinksDelegate, $mmContentLinksHelper, $translate, mmCoreLoginSiteCheckedEvent, $state,
-            mmCoreLoginSiteUncheckedEvent) {
+            mmCoreLoginSiteUncheckedEvent, $log) {
 
     $scope.siteurl = $stateParams.siteurl;
     $scope.credentials = {

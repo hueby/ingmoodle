@@ -37,7 +37,7 @@ angular.module('mm.core.courses')
                 // filter out visible = 0
                 if(course.visible === 0 && course.format === "singleactivity") {
                     return course;
-                }
+                } 
             });
 
             var courseIds = coursess.map(function (course) {
@@ -53,7 +53,6 @@ angular.module('mm.core.courses')
                 $scope.courses = coursess;
                 $mmCourses.getModuleId(courseIds.join()).then(function(result) {
                     var courss = [];
-                    $log.debug(JSON.stringify(result));
                     angular.forEach(result, function(co) {
                         angular.forEach($scope.courses, function(cou) {
                             if(cou.id === co.id) {
@@ -65,7 +64,6 @@ angular.module('mm.core.courses')
                         });
                     });
                     $scope.courses = courss;
-                    $log.debug(JSON.stringify($scope.courses));
                 });
             });
 

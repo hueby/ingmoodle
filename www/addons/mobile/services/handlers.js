@@ -35,7 +35,7 @@ angular.module('mm.addons.mobile').factory('$mmaMobileHandlers', function ($mmSi
           return function ($scope) {
                 $scope.icon = 'ion-briefcase';
                 $scope.title = 'Energieberater';
-                $scope.state = 'site.mobile';
+                $scope.state = 'site.consultant_dashboard';
                 $scope.class = 'mma-mobile-handler';
             };
         };

@@ -64,7 +64,7 @@ angular.module('mm.addons.mobile').config(function () {}).factory('$mmaMobile', 
     self.getAllWorkprocesses = function(consultant) {
         return $mmSite.read(
             'local_mobile_get_working_processes',
-            {consultant: consultant},
+            {consultant: String(consultant)},
             {getFromCache: 0, saveToCache: 0}
         );
     }

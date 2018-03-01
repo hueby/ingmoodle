@@ -721,6 +721,7 @@ angular.module('mm.core')
         self.showErrorModal = function(errorMessage, needsTranslate, autocloseTime) {
             if (angular.isObject(errorMessage)) {
                 // We received an object instead of a string. Search for common properties.
+              $log.debug("HIER " + errorMessage);
                 if (typeof errorMessage.content != 'undefined') {
                     errorMessage = errorMessage.content;
                 } else if (typeof errorMessage.body != 'undefined') {

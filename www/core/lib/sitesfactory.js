@@ -277,6 +277,8 @@ angular.module('mm.core')
             this.loggedOut = !!loggedOut;
             this.cleanUnicode = false;
 
+            $log.debug(JSON.stringify(this));
+
             if (this.id) {
                 this.db = $mmDB.getDB('Site-' + this.id, siteSchema, dboptions);
             }

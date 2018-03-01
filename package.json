@@ -1,32 +1,42 @@
 {
-  "name": "moodlemobile",
-  "version": "3.4.0",
-  "description": "The official app for Moodle.",
+  "name": "StaySmartMobile",
+  "version": "1.0.0",
+  "description": "App für Energieberater",
   "author": {
-    "name": "Moodle Pty Ltd.",
-    "email": "mobile@moodle.com"
+    "name": "Dennis Hübner",
+    "email": "dennis.huebner89@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/moodlehq/moodlemobile2.git"
+    "url": "https://github.com/hueby/ingmoodle.git"
   },
-  "license": "Apache-2.0",
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
   "dependencies": {
     "cordova-android": "7.0.0",
-    "cordova-ios": "4.5.4",
-    "cordova-plugin-device": "^1.1.4",
-    "cordova-plugin-ionic-webview": "^1.1.16",
-    "cordova-plugin-splashscreen": "^4.0.3",
-    "cordova-plugin-whitelist": "^1.3.1",
+    "cordova-plugin-app-event": "^1.2.1",
+    "cordova-plugin-camera": "^2.4.1",
+    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-console": "^1.1.0",
+    "cordova-plugin-customurlscheme": "^4.3.0",
+    "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-file": "^6.0.0",
+    "cordova-plugin-file-transfer": "^1.7.1",
+    "cordova-plugin-globalization": "^1.0.9",
+    "cordova-plugin-inappbrowser": "^1.7.2",
+    "cordova-plugin-local-notifications-mm": "^1.0.6",
+    "cordova-plugin-media-capture": "^3.0.1",
+    "cordova-plugin-network-information": "^1.3.4",
+    "cordova-plugin-splashscreen": "^4.1.0",
+    "cordova-plugin-statusbar": "^2.4.1",
+    "cordova-plugin-webintent2": "^1.0.4",
+    "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-plugin-zip": "^3.1.0",
+    "cordova-universal-clipboard": "^0.1.0",
     "electron-builder-squirrel-windows": "^19.3.0",
     "electron-windows-notifications": "^1.1.13",
-    "ionic-plugin-keyboard": "^2.2.1"
+    "help": "3.0.2",
+    "ionic-plugin-keyboard": "^2.2.1",
+    "nl.kingsquare.cordova.background-audio": "^1.0.1",
+    "phonegap-plugin-push": "^1.10.6"
   },
   "devDependencies": {
     "appium": "^1.6.0",
@@ -125,16 +135,42 @@
     }
   },
   "cordova": {
-    "plugins": {
-      "ionic-plugin-keyboard": {},
-      "cordova-plugin-whitelist": {},
-      "cordova-plugin-device": {},
-      "cordova-plugin-splashscreen": {},
-      "cordova-plugin-ionic-webview": {}
-    },
     "platforms": [
-      "ios",
       "android"
-    ]
+    ],
+    "plugins": {
+      "cordova-plugin-file": {},
+      "cordova-plugin-file-transfer": {},
+      "cordova-plugin-console": {},
+      "cordova-plugin-camera": {},
+      "cordova-plugin-media-capture": {
+        "CAMERA_USAGE_DESCRIPTION": "We'd like to access your camera to let you take a photo",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "We'd like to access your photo library to let you pick a photo",
+        "MICROPHONE_USAGE_DESCRIPTION": "We'd like to access your microphone to let you record an audio"
+      },
+      "cordova-plugin-device": {},
+      "cordova-plugin-globalization": {},
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-universal-clipboard": {},
+      "nl.kingsquare.cordova.background-audio": {},
+      "phonegap-plugin-push": {
+        "SENDER_ID": "694767596569"
+      },
+      "cordova-plugin-customurlscheme": {
+        "URL_SCHEME": "moodlemobile",
+        "ANDROID_SCHEME": " ",
+        "ANDROID_HOST": " ",
+        "ANDROID_PATHPREFIX": "/"
+      },
+      "ionic-plugin-keyboard": {},
+      "cordova-plugin-zip": {},
+      "cordova-plugin-local-notifications-mm": {},
+      "cordova-plugin-webintent2": {},
+      "com.qdev.webintent": {}
+    }
   }
 }

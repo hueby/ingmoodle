@@ -264,13 +264,17 @@ angular.module('mm.core')
             service = self.determineService(siteurl);
         }
 
-        var loginurl = siteurl + '/login/token.php';
+        var loginurl = siteurl + "/login/token.php";
+        // loginurl += "?username=" + username;
+        // loginurl += "&password=" + password;
+        // loginurl += "&service=" + service;
         var data = {
             username: username,
             password: password,
             service: service
         };
 
+        // return $http.get(loginurl).then(function(response) {
         return $http.post(loginurl, data).then(function(response) {
             var data = response.data;
 
@@ -286,6 +290,7 @@ angular.module('mm.core')
                             siteurl = $mmText.addOrRemoveWWW(siteurl);
                             return self.getUserToken(siteurl, username, password, service, true);
                         } else if (typeof data.errorcode != 'undefined') {
+                          $log.debug("BAM " + JSON.stringify(data));
                             return $q.reject({error: data.error, errorcode: data.errorcode});
                         } else {
                             return $q.reject(data.error);
@@ -315,6 +320,7 @@ angular.module('mm.core')
         privateToken = privateToken || '';
 
         var candidateSite = $mmSitesFactory.makeSite(undefined, siteurl, token, undefined, privateToken);
+      $log.debug("made candidate site");
 
         return candidateSite.fetchSiteInfo().then(function(infos) {
             if (isValidMoodleVersion(infos)) {

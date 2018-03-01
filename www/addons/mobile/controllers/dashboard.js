@@ -8,7 +8,7 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
   });
 
   $scope.$on("$ionicView.beforeEnter", function() {
-    $mmaMobile.closeAllWorkprocesses($stateParams.consultant.id).then(function() {
+    $mmaMobile.closeAllWorkprocesses($mmSite.getUserId()).then(function() {
       $log.debug("All customers set to 0");
       $mmaMobile.getCustomers($mmSite.getUserId()).then(function(cus) {
         $scope.customers = cus;
@@ -25,7 +25,11 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
   };
 
   $scope.consultantDetail = function () {
-    $state.go("site.mmaConsultant", { consultant: $stateParams.consultant });
+    var user = $mmSite.getUserId();
+    $log.debug(user);
+    $mmaMobile.getEnergyConsultant($mmSite.getUserId()).then(function(cons) {
+      $state.go("site.mmaConsultant", { consultant: cons[0] });
+    });
   };
 
   $scope.refreshCustomers = function () {
@@ -37,7 +41,7 @@ angular.module('mm.addons.mobile').controller('mmaMobileConsultantOverviewCtrl',
     // tell the moodle server that
     // this energy consultant is working with customerId
 
-    $mmaMobile.activeCustomer($stateParams.consultant.id, customerId).then(function() {
+    $mmaMobile.activeCustomer($mmSite.getUserId(), customerId).then(function() {
       // on this point, load an extended version of mm_courses 
       $state.go("site.mm_courses_staysmart", { customer: customerId });
     }).catch(function(error){
