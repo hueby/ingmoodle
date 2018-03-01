@@ -11,6 +11,7 @@
     "url": "https://github.com/hueby/ingmoodle.git"
   },
   "dependencies": {
+    "clean": "4.0.2",
     "cordova-android": "7.0.0",
     "cordova-plugin-app-event": "^1.2.1",
     "cordova-plugin-camera": "^2.4.1",
