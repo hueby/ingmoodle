@@ -18,3 +18,6 @@ res
 .jsbeautifyrc
 .DS_Store
 *.swp
+my-release-key.jks
+resources/icon.png.md5
+resources/splash.png.md5

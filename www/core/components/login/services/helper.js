@@ -29,7 +29,7 @@ angular.module('mm.core.login')
  */
 .factory('$mmLoginHelper', function($q, $log, $mmConfig, mmLoginSSOCode, mmLoginSSOInAppCode, mmLoginLaunchData, $mmEvents,
             md5, $mmSite, $mmSitesManager, $mmLang, $mmUtil, $state, $mmAddonManager, $translate, mmCoreConfigConstants,
-            mmCoreEventSessionExpired, mmUserProfileState, $mmCourses, $mmFS, $mmApp, $mmEmulatorHelper, $mmWS) {
+            mmCoreEventSessionExpired, mmUserProfileState, $mmCourses, $mmFS, $mmApp, $mmEmulatorHelper, $mmWS, $mmaMobile) {
 
     $log = $log.getInstance('$mmLoginHelper');
 
@@ -269,25 +269,32 @@ angular.module('mm.core.login')
         return isMyOverviewEnabled().then(function(myOverview) {
             var myCourses = !myOverview && isMyCoursesEnabled();
 
-            // Check if frontpage is needed to be shown. (If configured or if any of the other avalaible).
-            if (($mmSite.getInfo() && $mmSite.getInfo().userhomepage === 0) || (!myCourses && !myOverview)) {
+            $mmaMobile.getEnergyConsultant($mmSite.getUserId()).then(() => {
+              return $state.go('site.consultant_dashboard');
+            }).catch(() => {
+              // Check if frontpage is needed to be shown. (If configured or if any of the other avalaible).
+              if (($mmSite.getInfo() && $mmSite.getInfo().userhomepage === 0) || (!myCourses && !myOverview)) {
                 promise = isFrontpageEnabled();
-            } else {
+              } else {
                 promise = $q.when(false);
-            }
+              }
 
-            return promise.then(function(frontpage) {
+              return promise.then(function(frontpage) {
                 // Check avalaibility in priority order.
                 if (frontpage) {
-                    return $state.go('site.frontpage');
+                  return $state.go('site.frontpage');
                 } else if (myOverview) {
-                    return $state.go('site.myoverview');
+                  $log.debug("my overview");
+                  return $state.go('site.myoverview');
                 } else if (myCourses) {
-                    return $state.go('site.mm_courses');
+                  $log.debug("mm courses");
+                  return $state.go('site.mm_courses');
                 } else {
-                    // Anything else available, go to the user profile.
-                    return $state.go(mmUserProfileState, {userid: $mmSite.getUserId()});
+                  $log.debug("else");
+                  // Anything else available, go to the user profile.
+                  return $state.go(mmUserProfileState, {userid: $mmSite.getUserId()});
                 }
+              });
             });
         });
 
