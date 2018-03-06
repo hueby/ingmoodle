@@ -21,3 +21,4 @@ res
 my-release-key.jks
 resources/icon.png.md5
 resources/splash.png.md5
+*.apk
